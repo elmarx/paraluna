@@ -3,6 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "noUnusedLocals": false,
+    "rootDir": "./"
   } ,
   "references": [
     {
