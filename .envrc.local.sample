@@ -1,0 +1,6 @@
+export HASS_TOKEN=$(pass show home-assistant/token)
+export HASS_URL=http://localhost:8123
+
+export MQTT_HOST=localhost
+export MQTT_USER=user
+export MQTT_PASSWORD=$(pass show mqtt/user)

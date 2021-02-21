@@ -1,5 +1,7 @@
 .idea
 
+.envrc.local
+
 dist
 node_modules
 yarn.lock
