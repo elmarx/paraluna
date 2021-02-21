@@ -1,10 +1,25 @@
 {
   "name": "paraluna",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elmarx/paraluna.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elmarx/paraluna/issues"
+  },
+  "homepage": "https://github.com/elmarx/paraluna",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Elmar Athmer <elmar@athmer.org>",
   "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "rm -r dist ; tsc -b"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/node": "^14.14.31",
     "jest": "^26.6.3",
