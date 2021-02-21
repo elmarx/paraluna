@@ -1,5 +1,8 @@
-import { MqttMessage } from "../mqttSource";
-import { isZigbee2MqttMessage, stripTopicPrefix } from "./zigbee2mqtt";
+import { MqttMessage } from "../../src/mqttSource";
+import {
+  isZigbee2MqttMessage,
+  stripTopicPrefix,
+} from "../../src/zigbee2mqtt/zigbee2mqtt";
 
 test("detecting mqtt messages from zigbee2mqtt", () => {
   const sample: MqttMessage = {
