@@ -3,11 +3,19 @@ import { Observer } from "rxjs";
 import { AsyncMqttClient, connectAsync } from "async-mqtt";
 import { mqttSource, zigbee2mqttSource } from "../src";
 
-export function debugObserver<T>(name: string): Observer<T> {
+export function debugObserver<T>(name?: string): Observer<T> {
+  if (name) {
+    return {
+      error: (error) => console.error("⚠️", `[${name}]`, error),
+      next: (value) => console.log("▶️", `[${name}]`, value),
+      complete: () => console.log("⏹", `[${name}]`, "completed"),
+    };
+  }
+
   return {
-    error: (error) => console.error({ name, error }),
-    next: (value) => console.log({ name, value }),
-    complete: () => console.log(name + " completed"),
+    error: (error) => console.error("⚠️", error),
+    next: (value) => console.log("▶️", value),
+    complete: () => console.log("⏹", "completed️"),
   };
 }
 
