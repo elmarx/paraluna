@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 import { distinct, map } from "rxjs/operators";
 import { ZigbeeSource } from "./zigbee.source";
 import { ZigbeeDeviceSink } from "../model.zigbee";
-import { AsyncClient, AsyncMqttClient } from "async-mqtt";
+import { AsyncMqttClient } from "async-mqtt";
 import { BridgeState, DeviceInformation } from "./zigbee.bride";
 
 // https://www.zigbee2mqtt.io/information/configuration.html#configuration base topic, hard coded for now to the default value
@@ -80,8 +80,19 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
 export type ZigbeeSink = (sink: ZigbeeDeviceSink) => void;
 export type ZigbeeDriver = { source: ZigbeeSource; sink: ZigbeeSink };
 
+/**
+ * typeguard to distinguish MqttDriver and AsyncMqttClient for ergonomic initialization of the zigbeeDriver
+ *
+ * since async-mqtt can be located multiple times below top-level node_modules it's no guaranteed that the
+ * AsyncMqttClient we like to check against via `instanceof` is the exact same object. So we rely on the naive
+ * property testing here.
+ */
+function isMqttDriver(m: MqttDriver | AsyncMqttClient): m is MqttDriver {
+  return m.hasOwnProperty("source") && m.hasOwnProperty("sink");
+}
+
 export function zigbeeDriver(mqtt: MqttDriver | AsyncMqttClient): ZigbeeDriver {
-  const mqttD = mqtt instanceof AsyncClient ? mqttDriver(mqtt) : mqtt;
+  const mqttD = isMqttDriver(mqtt) ? mqtt : mqttDriver(mqtt);
 
   return {
     source: zigbeeSource(mqttD.source),
