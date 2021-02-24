@@ -6,10 +6,11 @@ import {
   MqttSource,
 } from "./mqtt";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { distinct, map } from "rxjs/operators";
 import { ZigbeeSource } from "./zigbee.source";
 import { ZigbeeDeviceSink } from "../model.zigbee";
 import { AsyncClient, AsyncMqttClient } from "async-mqtt";
+import { BridgeState, DeviceInformation } from "./zigbee.bride";
 
 // https://www.zigbee2mqtt.io/information/configuration.html#configuration base topic, hard coded for now to the default value
 const ZIGBEE2MQTT_BASE_TOPIC = "zigbee2mqtt";
@@ -41,19 +42,36 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
         .pipe(
           map<MqttMessage, T>(
             (v): T =>
-              JSON.parse(
-                v.value.toString(),
-                (k, v) => k === "last_seen" ? new Date(v) : v,
-              ) as any,
-          ),
+              JSON.parse(v.value.toString(), (k, v) =>
+                k === "last_seen" ? new Date(v) : v
+              ) as any
+          )
         );
     },
 
-    state(): Observable<"online" | "offline"> {
-      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
-        map<MqttMessage, "online" | "offline">(({ value }) =>
-          value.toString() as any
+    state(): Observable<BridgeState> {
+      return mqtt
+        .topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state")
+        .pipe(
+          map<MqttMessage, BridgeState>(({ value }) => value.toString() as any)
+        );
+    },
+
+    deviceInfos(): Observable<DeviceInformation[]> {
+      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/devices").pipe(
+        map<MqttMessage, DeviceInformation[]>(({ value }) =>
+          JSON.parse(value.toString())
+        )
+      );
+    },
+
+    deviceInfo(friendlyName: string): Observable<DeviceInformation | null> {
+      return this.deviceInfos().pipe(
+        map<DeviceInformation[], DeviceInformation | null>(
+          (devices) =>
+            devices.find((d) => d.friendly_name === friendlyName) || null
         ),
+        distinct()
       );
     },
   };

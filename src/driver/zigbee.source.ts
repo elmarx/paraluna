@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
 import { E1743SourceProperties, LED1836G9SourceProperties } from "../devices";
+import { BridgeState, DeviceInformation } from "./zigbee.bride";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -26,7 +27,17 @@ export interface ZigbeeSource {
   /**
    * current state of the bridge
    *
-   * https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgestate
+   * @see https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgestate
    */
-  state(): Observable<"online" | "offline">;
+  state(): Observable<BridgeState>;
+
+  /**
+   * show detailed device information
+   *
+   * return null if the device is not found
+   *
+   * @see https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgedevices
+   */
+  deviceInfo(friendlyName: string): Observable<DeviceInformation | null>;
+  deviceInfos(): Observable<DeviceInformation[]>;
 }
