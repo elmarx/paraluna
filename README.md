@@ -28,8 +28,16 @@ Other systems could be integrated later.
 ### zigbee2mqtt
 
 - uses [mqtt](https://www.npmjs.com/package/mqtt) (and [mqtt-async](https://github.com/mqttjs/async-mqtt)) directly.
-- requires `experimental.output` set to *attribute_and_json* (attribute would be sufficient, but json is required for home-assistant)
-- assumes base topic "zigbee2mqtt""
+
+#### Required settings
+
+- `advanced.last_seen` *ISO_8601* not required directly, but used in type definitions
+- `device_options.retain` *true* simplifies usage, especially startup
+  
+#### Assumes defaults 
+
+- base topic "zigbee2mqtt" (`mqtt.base_topic`)
+- json message format (`exerimental.output` "json" or "attribute_and_json")
 
 ### home-assistant
 
