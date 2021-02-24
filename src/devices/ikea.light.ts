@@ -16,3 +16,12 @@ export type LED1836G9SourceProperties = DeviceLastSeen &
 export type LED1836G9SinkProperties = Partial<
   LightBrightness & LightColorTemp & SwitchState
 >;
+
+export type LED1903C5LED1835C6SourceProperties = DeviceLastSeen &
+  DeviceLinkquality &
+  LightBrightness &
+  SwitchState;
+
+export type LED1903C5LED1835C6SinkProperties = Partial<
+  LightBrightness & SwitchState
+>;
