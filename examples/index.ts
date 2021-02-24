@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Observer } from "rxjs";
 import { AsyncMqttClient, connectAsync } from "async-mqtt";
-import { mqttSource, zigbee2mqttSource } from "../src";
+import { zigbeeDriver } from "../src/driver";
 
 export function debugObserver<T>(name?: string): Observer<T> {
   if (name) {
@@ -36,15 +36,13 @@ export function initClient(): Promise<AsyncMqttClient> {
 }
 
 /**
- * initialize the zigbee2mqtt sources and subscribe to the bridge-state topic ("online" or "offline") printing to console
+ * initialize the zigbee2mqtt source/driver and subscribe to the bridge-state topic ("online" or "offline") printing to console
  */
 async function main() {
   const client = await initClient();
+  const zigbee = zigbeeDriver(client);
 
-  const messages$ = await mqttSource(client);
-  const zigbee2mqtt = await zigbee2mqttSource(client, messages$);
-
-  zigbee2mqtt.state.subscribe(debugObserver("zigbee2mqtt"));
+  zigbee.source.state().subscribe(debugObserver("zigbee2mqtt"));
 }
 
 if (require.main === module) {
