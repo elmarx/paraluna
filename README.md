@@ -33,6 +33,10 @@ Other systems could be integrated later.
 
 - `advanced.last_seen` *ISO_8601* not required directly, but used in type definitions
 - `device_options.retain` *true* simplifies usage, especially startup
+
+##### Device specific
+
+- `simulated_brightness` for [Ikea E1743 (TRADFRI ON/OFF switch)](https://www.zigbee2mqtt.io/devices/E1743.html)
   
 #### Assumes defaults 
 

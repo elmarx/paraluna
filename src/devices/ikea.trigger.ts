@@ -1,9 +1,15 @@
-import { DeviceBattery, DeviceLastSeen, DeviceLinkquality } from "./index";
+import {
+  DeviceBattery,
+  DeviceLastSeen,
+  DeviceLinkquality,
+  LightBrightness,
+} from "./index";
 
 export type E1743SourceProperties = DeviceLastSeen &
   DeviceLinkquality &
+  LightBrightness &
   DeviceBattery & {
-    action:
+    action?:
       | "on"
       | "off"
       | "brightness_move_down"

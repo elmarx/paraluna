@@ -14,16 +14,22 @@ function light(zigbee: ZigbeeSource) {
   );
 
   const azDeskLight$ = azTriggerDimmer$.pipe(
-    map((v): LED1836G9SinkProperties => {
-      switch (v.action) {
-        case "on":
-          return { state: "ON" };
-        case "off":
-          return { state: "OFF" };
-        default:
-          return {};
-      }
-    }),
+    map(
+      (v): LED1836G9SinkProperties => {
+        switch (v.action) {
+          case "on":
+            return { state: "ON" };
+          case "off":
+            return { state: "OFF" };
+          case "brightness_move_up":
+          case "brightness_move_down":
+          case undefined:
+            return { brightness: v.brightness };
+          default:
+            return {};
+        }
+      },
+    ),
   );
 
   return [zigbeeDeviceSink("az_desk_light", azDeskLight$)];
