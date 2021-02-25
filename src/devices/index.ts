@@ -11,5 +11,14 @@ export type LightBrightness = {
 export type LightColorTemp = {
   color_temp: number;
 };
+export type LightEffect = {
+  effect:
+    | "blink"
+    | "breathe"
+    | "okay"
+    | "channel_change"
+    | "finish_effect"
+    | "stop_effect";
+};
 
 export type SwitchState = { state: "ON" | "OFF" };

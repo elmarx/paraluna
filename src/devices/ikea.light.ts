@@ -5,6 +5,10 @@
 import {
   DeviceLastSeen,
   DeviceLinkquality,
+  LightBrightness,
+  LightColorTemp,
+  LightEffect,
+  SwitchState,
 } from "./index";
 
 export type LED1836G9SourceProperties = DeviceLastSeen &
@@ -14,7 +18,7 @@ export type LED1836G9SourceProperties = DeviceLastSeen &
   SwitchState;
 
 export type LED1836G9SinkProperties = Partial<
-  LightBrightness & LightColorTemp & SwitchState
+  LightBrightness & LightColorTemp & SwitchState & LightEffect
 >;
 
 export type LED1903C5LED1835C6SourceProperties = DeviceLastSeen &
@@ -23,5 +27,5 @@ export type LED1903C5LED1835C6SourceProperties = DeviceLastSeen &
   SwitchState;
 
 export type LED1903C5LED1835C6SinkProperties = Partial<
-  LightBrightness & SwitchState
+  LightBrightness & SwitchState & LightEffect
 >;
