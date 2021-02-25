@@ -6,7 +6,7 @@ import {
   MqttSource,
 } from "./mqtt";
 import { Observable } from "rxjs";
-import { distinct, map } from "rxjs/operators";
+import { distinct, map, share } from "rxjs/operators";
 import { ZigbeeSource } from "./zigbee.source";
 import { ZigbeeDeviceSink } from "../model.zigbee";
 import { AsyncMqttClient } from "async-mqtt";
@@ -37,31 +37,30 @@ export function zigbeeSink(mqtt: MqttSink) {
 function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
   return {
     device<T>(friendlyName: string): Observable<T> {
-      return mqtt
-        .topic(ZIGBEE2MQTT_BASE_TOPIC + "/" + friendlyName)
-        .pipe(
-          map<MqttMessage, T>(
-            (v): T =>
-              JSON.parse(v.value.toString(), (k, v) =>
-                k === "last_seen" ? new Date(v) : v
-              ) as any
-          )
-        );
+      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/" + friendlyName).pipe(
+        map<MqttMessage, T>(
+          (v): T =>
+            JSON.parse(v.value.toString(), (k, v) =>
+              k === "last_seen" ? new Date(v) : v
+            ) as any
+        ),
+        share()
+      );
     },
 
     state(): Observable<BridgeState> {
-      return mqtt
-        .topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state")
-        .pipe(
-          map<MqttMessage, BridgeState>(({ value }) => value.toString() as any)
-        );
+      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
+        map<MqttMessage, BridgeState>(({ value }) => value.toString() as any),
+        share()
+      );
     },
 
     deviceInfos(): Observable<DeviceInformation[]> {
       return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/devices").pipe(
         map<MqttMessage, DeviceInformation[]>(({ value }) =>
           JSON.parse(value.toString())
-        )
+        ),
+        share()
       );
     },
 
@@ -71,7 +70,8 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
           (devices) =>
             devices.find((d) => d.friendly_name === friendlyName) || null
         ),
-        distinct()
+        distinct(),
+        share()
       );
     },
   };

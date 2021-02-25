@@ -1,6 +1,6 @@
 import { AsyncMqttClient } from "async-mqtt";
 import { concat, from, fromEvent, Observable } from "rxjs";
-import { filter, skip } from "rxjs/operators";
+import { filter, share, skip } from "rxjs/operators";
 import { isError, tryF } from "ts-try";
 
 export type MqttMessage = {
@@ -50,8 +50,11 @@ function mqttSource(client: AsyncMqttClient) {
 
       return concat(
         subscriptionGrant$.pipe(skip(1)),
-        source.pipe(filter(({ topic }) => topic === name)),
-      ) as any;
+        source.pipe(
+          filter(({ topic }) => topic === name),
+          share()
+        )
+      ) as Observable<MqttMessage>;
     },
   };
 }
