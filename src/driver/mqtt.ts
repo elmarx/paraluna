@@ -40,7 +40,7 @@ function mqttSource(client: AsyncMqttClient) {
     (topic: string, value: Buffer): MqttMessage => ({
       topic,
       value,
-    })
+    }),
   );
 
   return {
@@ -52,8 +52,8 @@ function mqttSource(client: AsyncMqttClient) {
         subscriptionGrant$.pipe(skip(1)),
         source.pipe(
           filter(({ topic }) => topic === name),
-          share()
-        )
+          share(),
+        ),
       ) as Observable<MqttMessage>;
     },
   };

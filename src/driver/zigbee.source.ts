@@ -21,15 +21,15 @@ export interface ZigbeeSource {
   device<T>(friendlyName: string): Observable<T>;
   device(
     friendlyName: string,
-    modelId: "TRADFRI bulb E27 WW 806lm"
+    modelId: "TRADFRI bulb E27 WW 806lm",
   ): Observable<LED1836G9SourceProperties>;
   device(
     friendlyName: string,
-    modelId: "TRADFRI on/off switch"
+    modelId: "TRADFRI on/off switch",
   ): Observable<E1743SourceProperties>;
   device(
     friendlyName: string,
-    modelId: "TRADFRI bulb E14 WS 470lm"
+    modelId: "TRADFRI bulb E14 WS 470lm",
   ): Observable<LED1903C5LED1835C6SourceProperties>;
 
   /**

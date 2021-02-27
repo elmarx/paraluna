@@ -25,8 +25,8 @@ export function zigbeeSink(mqtt: MqttSink) {
         map<unknown, MqttMessage>((v) => ({
           topic: `${ZIGBEE2MQTT_BASE_TOPIC}/${deviceSink.friendlyName}/set`,
           value: Buffer.from(JSON.stringify(v)),
-        }))
-      )
+        })),
+      ),
     );
   };
 }
@@ -41,26 +41,26 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
         map<MqttMessage, T>(
           (v): T =>
             JSON.parse(v.value.toString(), (k, v) =>
-              k === "last_seen" ? new Date(v) : v
-            ) as any
+              k === "last_seen" ? new Date(v) : v,
+            ) as any,
         ),
-        share()
+        share(),
       );
     },
 
     state(): Observable<BridgeState> {
       return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
         map<MqttMessage, BridgeState>(({ value }) => value.toString() as any),
-        share()
+        share(),
       );
     },
 
     deviceInfos(): Observable<DeviceInformation[]> {
       return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/devices").pipe(
         map<MqttMessage, DeviceInformation[]>(({ value }) =>
-          JSON.parse(value.toString())
+          JSON.parse(value.toString()),
         ),
-        share()
+        share(),
       );
     },
 
@@ -68,10 +68,10 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
       return this.deviceInfos().pipe(
         map<DeviceInformation[], DeviceInformation | null>(
           (devices) =>
-            devices.find((d) => d.friendly_name === friendlyName) || null
+            devices.find((d) => d.friendly_name === friendlyName) || null,
         ),
         distinct(),
-        share()
+        share(),
       );
     },
   };

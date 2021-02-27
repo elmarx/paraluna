@@ -47,5 +47,8 @@
     ],
     "ext": "ts",
     "exec": "ts-node --dir examples"
+  },
+  "prettier": {
+    "trailingComma": "all"
   }
 }

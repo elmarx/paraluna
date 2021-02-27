@@ -13,7 +13,7 @@ export function replayValueWhen<T>(predicate: (v: T) => boolean, rate: number) {
         } else {
           return of(v);
         }
-      })
+      }),
     );
   };
 }
