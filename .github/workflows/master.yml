@@ -1,0 +1,34 @@
+name: NodeJS Typescript
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [14.x, 15.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: yarn install
+      - run: ./node_modules/.bin/tsc -b
+
+      - name: test if all files have been formatted with prettier
+        run: ./node_modules/.bin/prettier -c {src,test}/**/*.ts
+
+      - run: ./node_modules/.bin/jest
+
+      - name: check for unnecessary packages
+        run: npx depcheck --ignore-bin-package
