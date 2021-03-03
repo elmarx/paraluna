@@ -1,11 +1,7 @@
-import {
-  DeviceBattery,
-  DeviceLastSeen,
-  DeviceLinkquality,
-  LightBrightness,
-} from "./index";
+import { LightBrightness } from "./light";
+import { DeviceBattery, DeviceLastSeen, DeviceLinkquality } from "./common";
 
-export type E1743SourceProperties = DeviceLastSeen &
+export type E1743Source = DeviceLastSeen &
   DeviceLinkquality &
   LightBrightness &
   DeviceBattery & {

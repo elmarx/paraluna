@@ -1,8 +1,8 @@
 import { Observable } from "rxjs";
 import {
-  E1743SourceProperties,
-  LED1836G9SourceProperties,
-  LED1903C5LED1835C6SourceProperties,
+  E1743Source,
+  LED1836G9Source,
+  LED1903C5LED1835C6Source,
 } from "../devices";
 import { BridgeState, DeviceInformation } from "./zigbee.bride";
 
@@ -22,15 +22,15 @@ export interface ZigbeeSource {
   device(
     friendlyName: string,
     modelId: "TRADFRI bulb E27 WW 806lm",
-  ): Observable<LED1836G9SourceProperties>;
+  ): Observable<LED1836G9Source>;
   device(
     friendlyName: string,
     modelId: "TRADFRI on/off switch",
-  ): Observable<E1743SourceProperties>;
+  ): Observable<E1743Source>;
   device(
     friendlyName: string,
     modelId: "TRADFRI bulb E14 WS 470lm",
-  ): Observable<LED1903C5LED1835C6SourceProperties>;
+  ): Observable<LED1903C5LED1835C6Source>;
 
   /**
    * current state of the bridge
