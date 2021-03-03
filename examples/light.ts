@@ -2,7 +2,7 @@ import { paraluna, zigbeeDeviceSink } from "../src";
 import { map } from "rxjs/operators";
 import { initClient } from "./index";
 import { zigbeeDriver, ZigbeeSource } from "../src/driver";
-import { LED1836G9SinkProperties } from "../src/devices";
+import { LED1836G9Sink } from "../src";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
@@ -15,7 +15,7 @@ function light(zigbee: ZigbeeSource) {
 
   const azDeskLight$ = azTriggerDimmer$.pipe(
     map(
-      (v): LED1836G9SinkProperties => {
+      (v): LED1836G9Sink => {
         switch (v.action) {
           case "on":
             return { state: "ON" };
