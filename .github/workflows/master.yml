@@ -23,7 +23,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: yarn install
-      - run: ./node_modules/.bin/tsc -b
+
+      - name: compile examples
+        run: ../node_modules/.bin/tsc -b
+        working-directory: ./examples
+
+      - name: compile src
+        run: ./node_modules/.bin/tsc -b
 
       - name: test if all files have been formatted with prettier
         run: ./node_modules/.bin/prettier -c {src,test}/**/*.ts
