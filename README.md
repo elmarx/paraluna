@@ -1,29 +1,45 @@
 # 🌘 Paraluna — Reactive Home Automation ☂️
 
-Paraluna is a set of building blocks to implement home automation using FRP with typescript.
+![npm](https://img.shields.io/npm/v/paraluna)
+ 
 
-"Reactive" is a great way to model home automation, since home automation is basically event driven.
+Paraluna is a set of building blocks to implement home automation using FRP with typescript (and rxjs).
+
+Since every input to your home-automation is typically an event, incoming events can be transformed and written back to devices (e.g. a switch "on" event needs to be written to a "light").
+
+Given that everything is an event you can apply [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) to build up arbitrary complex "application" state with ease.
+
+On top of that, the model to consume events and return "commands" (to be written to mqtt etc.) makes it possible to model home-automation as pure functions and thus even enable unit testing.         
 
 ## Sinks and Sources
+               
+The idea to communicate with the outside is to think of "sources" as side-effects for input (of events) and "sinks" as side-effects for output (of "commands").
+So sources are streams of events or rather values, like triggers or sensors which provide read-only values. Sinks on the other side allow writing values, e.g. a bulb that receives a brightness value.
 
-The idea of paraluna is that your home-automation consists of sinks and sources. Sources are streams of events or rather values, like triggers or sensors which provide read-only values. 
-If you think of the typical reactive/rxjs examples how to implement autocomplete with rxjs (including debounce etc.), one could imagine how powerful this model ist.
+This basic idea of "sinks" and "sources" is inspired by the [cycle.js](https://cycle.js.org/) framework.      
 
-Sinks on the other side allow writing values, e.g. a bulb that receives a brightness value.
+### RXJS
 
-To automate your home, sinks can be connected via transformations to sources, so they can *react* to events.
+Building upon [rxjs](https://rxjs.dev/guide/overview) your automation "connects" to an Observable of events and returns observables of "commands" (`{state: "ON"}` via mqtt topic `livingroom/light`).
 
-This basic idea of "sinks" and "sources" is inspired by the [cycle.js](https://cycle.js.org/) framework.                   
+Given RXJS Operators it's easy to build complex automations (think of the typical reactive/rxjs examples how to implement autocomplete with debounce etc.).
+
+## When to use paraluna?
+
+- when modeling your home automation tasks as *reactive streams*, *sinks & sources* and *event sourced* fits your way of thinking
+- when programming-capabilities of other platforms are not sufficient (e.g. home-assistant)
+- when writing typescript/code is more convenient than [writing yaml](https://www.home-assistant.io/docs/automation/basics/), using [Node-RED](https://nodered.org/)
+- you want to unit-test your automations
+- you like rxjs and typescript
 
 ## Integration
 
-Paraluna works great with zigbee2mqtt, but also supports home-assistant. 
+Paraluna works great with mqtt (e.g. [zigbee2mqtt](https://www.zigbee2mqtt.io/)), but also supports [home-assistant](https://www.home-assistant.io/). Supporting other "systems" is just a matter of defining appropriate drivers (sources and sinks).
+
 Typically, devices can be controlled directly via mqtt/zigbee2mqtt, but to reuse automation/scripts/scenes it makes sense
 to use home-assistant as proxy.
 
-Also, home-assistant offers additional "sensors" (or entities to be precise in hass-speak) via it's integrations that are not availbale via mqtt, e.g. Weather Information, Device Information (from mobile phones), weather, sunset etc.
-
-Other systems could be integrated later.
+Also, home-assistant offers additional "sensors" (or entities to be precise in hass-speak) via it's integrations that are not available via mqtt, e.g. Weather Information, Device Information (from mobile phones), sunset etc.
 
 ### zigbee2mqtt
 
