@@ -6,8 +6,25 @@ import { DimmableLightSource, TunableWhiteLightSource } from "./light.source";
 import { DimmableLightSink, TunableWhiteLightSink } from "./light.sink";
 import { LightEffect } from "./light";
 
-export type LED1836G9Source = TunableWhiteLightSource;
-export type LED1836G9Sink = TunableWhiteLightSink & Partial<LightEffect>;
+export type IkeaColorTemperatures =
+  | "coolest"
+  | "cool"
+  | "neutral"
+  | "warm"
+  | "warmest";
+
+export type IkeaTunableWhiteLightSource = TunableWhiteLightSource & {
+  color_temp: number | IkeaColorTemperatures;
+};
+
+export type IkeaTunableWhiteLightSinks = TunableWhiteLightSink &
+  Partial<LightEffect> &
+  Partial<{
+    color_temp: number | IkeaColorTemperatures;
+  }>;
+
+export type LED1836G9Source = IkeaTunableWhiteLightSource;
+export type LED1836G9Sink = IkeaTunableWhiteLightSinks;
 
 export type LED1903C5LED1835C6Source = DimmableLightSource;
 export type LED1903C5LED1835C6Sink = DimmableLightSink & Partial<LightEffect>;
