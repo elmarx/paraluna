@@ -1,14 +1,14 @@
-import { paraluna, zigbeeDeviceSink } from "../src";
+import { LED1836G9Sink, paraluna, zigbeeDeviceSink } from "../src";
 import { map } from "rxjs/operators";
 import { initClient } from "./index";
-import { zigbeeDriver, ZigbeeSource } from "../src/driver";
-import { LED1836G9Sink } from "../src";
+import { zigbeeDriver } from "../src/driver";
+import { Sources } from "../src/paraluna";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
  */
-function light(zigbee: ZigbeeSource) {
-  const azTriggerDimmer$ = zigbee.device(
+function light(sources: Partial<Sources>) {
+  const azTriggerDimmer$ = sources.zigbee!.device(
     "az_trigger_dimmer",
     "TRADFRI on/off switch",
   );
@@ -42,7 +42,7 @@ async function init() {
   const client = await initClient();
   const zigbee = zigbeeDriver(client);
 
-  paraluna(light, zigbee);
+  paraluna(light, { zigbee } as any);
 }
 
 if (require.main === module) {
