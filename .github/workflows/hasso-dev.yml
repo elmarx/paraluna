@@ -1,0 +1,42 @@
+name: Hasso Development
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - run: yarn install
+
+    - name: install hasso from source
+      run: yarn add https://github.com/elmarx/hasso.git
+
+    - name: setup hasso
+      run: yarn install
+      working-directory: ./node_modules/hasso
+
+    - name: compile hasso
+      run: ./node_modules/.bin/tsc -b
+      working-directory: ./node_modules/hasso
+
+    - name: typecheck sources
+      run: npx tsc -b
+
+    - name: typecheck examples
+      run: npx tsc -b
+      working-directory: examples
+
+    - run: npx jest
