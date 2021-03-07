@@ -1,4 +1,4 @@
-name: NodeJS Typescript
+name: Master
 
 on:
   push:
@@ -24,17 +24,17 @@ jobs:
 
       - run: yarn install
 
+      - name: compile src
+        run: npx tsc -b
+
       - name: compile examples
-        run: ../node_modules/.bin/tsc -b
+        run: npx tsc -b
         working-directory: ./examples
 
-      - name: compile src
-        run: ./node_modules/.bin/tsc -b
-
       - name: test if all files have been formatted with prettier
-        run: ./node_modules/.bin/prettier -c {src,test}/**/*.ts
+        run: npx prettier -c {src,test}/**/*.ts
 
-      - run: ./node_modules/.bin/jest
+      - run: npx jest
 
       - name: check for unnecessary packages
         run: npx depcheck --ignore-bin-package
