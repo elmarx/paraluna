@@ -1,20 +1,5 @@
 import { Observable } from "rxjs";
-import { State } from "hasso";
-
-export type Sun = State & {
-  attributes: {
-    next_dawn: Date;
-    next_dusk: Date;
-    next_midnight: Date;
-    next_noon: Date;
-    next_rising: Date;
-    next_setting: Date;
-    elevation: number;
-    azimuth: number;
-    rising: boolean;
-    friendly_name: "Sun";
-  };
-};
+import { KnownEntities, State, Sun } from "hasso";
 
 export interface HassSource {
   /**
@@ -25,5 +10,5 @@ export interface HassSource {
    * @param entityId
    */
   state(entityId: string): Observable<State>;
-  // state(entityId: "sun.sun"): Observable<Sun>;
+  state(entityId: KnownEntities.Sun): Observable<Sun>;
 }

@@ -1,10 +1,6 @@
-import { paraluna, zigbeeDeviceSink } from "../src";
-import { map } from "rxjs/operators";
-import { debugObserver, initClient, initHass } from "./index";
-import { zigbeeDriver, ZigbeeSource } from "../src/driver";
-import { LED1836G9Sink } from "../src";
+import { debugObserver, initHass } from "./index";
 import { hassDriver } from "../src/driver/hass";
-import assert from "assert";
+import { KnownEntities } from "../../hasso";
 
 /**
  * initialize driver and kick off paraluna (which wires together sources, sinks and main function)
@@ -13,7 +9,7 @@ async function init() {
   const { hassToken, hassUrl } = initHass();
   const hass = await hassDriver(hassToken, hassUrl);
 
-  hass.source.state("sun.sun").subscribe(debugObserver());
+  hass.source.state(KnownEntities.Sun).subscribe(debugObserver());
 }
 
 if (require.main === module) {
