@@ -27,9 +27,11 @@ function hassSource(
       const initState$ = from(hass.state(entityId)).pipe(
         switchMap((r) => (isError(r) ? throwError(r) : of(r))),
       );
-      const stateUpdates$ = stateChanged$.pipe(
-        filter((s) => s.data.entity_id === entityId),
-        map((s) => s.data.new_state),
+      const stateUpdates$: Observable<State> = stateChanged$.pipe(
+        filter(
+          (s) => s.data.entity_id === entityId && s.data.new_state !== null,
+        ),
+        map((s) => s.data.new_state as State),
       );
 
       // as we return 'any' make sure we have the correct type here
