@@ -37,4 +37,4 @@ jobs:
       - run: npx jest
 
       - name: check for unnecessary packages
-        run: npx depcheck --ignore-bin-package
+        run: npx depcheck --ignore-bin-package --ignores @types/jest
