@@ -1,7 +1,5 @@
 import { DeviceSink } from "./index";
-import { ZigbeeDriver, ZigbeeSource } from "./driver";
-import { HassSource } from "./driver/hass.source";
-import { HassDriver } from "./driver/hass";
+import { HassDriver, HassSource, ZigbeeDriver, ZigbeeSource } from "./driver";
 
 export type Sources = {
   zigbee: ZigbeeSource;
