@@ -12,3 +12,22 @@ export type E1743Source = DeviceLastSeen &
       | "brightness_move_up"
       | "brightness_stop";
   };
+
+export type E1524E1810Source = DeviceLastSeen &
+  DeviceLinkquality &
+  DeviceBattery & {
+    action?:
+      | "brightness_down_release"
+      | "toggle_hold"
+      | "toggle"
+      | "arrow_left_click"
+      | "arrow_right_click"
+      | "arrow_left_hold"
+      | "arrow_right_hold"
+      | "arrow_left_release"
+      | "arrow_right_release"
+      | "brightness_up_click"
+      | "brightness_down_click"
+      | "brightness_up_hold"
+      | "brightness_up_release";
+  };
