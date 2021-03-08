@@ -18,7 +18,7 @@ function hassSource(
   socket: HomeAssistantWebSocket,
 ): HassSource {
   const stateChanged$: Observable<StateChangedEvent> = fromEvent(
-    socket,
+    socket as any, // TODO: okay, I put "a lot" of work to strip HomeAssistantWebSocket down to StrictEventEmmitter, and now it's to strict for fromEvent :/
     HassEvent.STATE_CHANGED,
   );
 
