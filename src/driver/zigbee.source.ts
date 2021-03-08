@@ -1,6 +1,7 @@
 import { Observable } from "rxjs";
 import {
   E1524E1810Source,
+  E1525E1745Source,
   E1743Source,
   LED1836G9Source,
   LED1903C5LED1835C6Source,
@@ -36,6 +37,10 @@ export interface ZigbeeSource {
     friendlyName: string,
     modelId: "TRADFRI remote control",
   ): Observable<E1524E1810Source>;
+  device(
+    friendlyName: string,
+    modelId: "TRADFRI motion sensor",
+  ): Observable<E1525E1745Source>;
 
   /**
    * current state of the bridge
