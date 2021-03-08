@@ -3,6 +3,7 @@ import {
   E1524E1810Source,
   E1525E1745Source,
   E1743Source,
+  LED1624G9Source,
   LED1836G9Source,
   LED1903C5LED1835C6Source,
 } from "../devices";
@@ -41,6 +42,10 @@ export interface ZigbeeSource {
     friendlyName: string,
     modelId: "TRADFRI motion sensor",
   ): Observable<E1525E1745Source>;
+  device(
+    friendlyName: string,
+    modelId: "TRADFRI bulb E14 CWS opal 600lm",
+  ): Observable<LED1624G9Source>;
 
   /**
    * current state of the bridge
