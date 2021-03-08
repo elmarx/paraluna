@@ -1,12 +1,14 @@
 import { LightBrightness, LightColor, LightColorTemp } from "./light";
-import { SwitchState } from "./common";
+import { SwitchState, Transistion } from "./common";
 
 export type TunableWhiteLightSink = Partial<
-  LightBrightness & LightColorTemp & SwitchState
+  LightBrightness & LightColorTemp & SwitchState & Transistion
 >;
 
-export type DimmableLightSink = Partial<LightBrightness & SwitchState>;
+export type DimmableLightSink = Partial<
+  LightBrightness & SwitchState & Transistion
+>;
 
 export type ColorLightSink = Partial<
-  LightBrightness & LightColor & SwitchState
+  LightBrightness & LightColor & SwitchState & Transistion
 >;
