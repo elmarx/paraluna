@@ -2,6 +2,8 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { KnownEntities, reviveSunState, State, Sun } from "hasso";
 
+export { KnownEntities, Sun };
+
 /**
  * parse/revive attributes of known entities
  */
