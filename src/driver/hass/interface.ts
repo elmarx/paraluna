@@ -10,5 +10,8 @@ export interface HassSource {
    * @param entityId
    */
   state(entityId: string): Observable<State>;
+
   state(entityId: KnownEntities.Sun): Observable<Sun>;
 }
+
+export type HassDriver = { source: HassSource; close: () => Promise<unknown> };

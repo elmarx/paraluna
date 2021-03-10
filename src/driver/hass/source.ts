@@ -1,17 +1,17 @@
-import { HassSource } from "./hass.source";
 import {
+  HassEvent,
   HomeAssistant,
   HomeAssistantWebSocket,
-  StateChangedEvent,
-  HassEvent,
   State,
+  StateChangedEvent,
 } from "hasso";
-import { from, fromEvent, Observable, concat, throwError, of } from "rxjs";
+import { concat, from, fromEvent, Observable, of, throwError } from "rxjs";
 import { filter, map, switchMap } from "rxjs/operators";
 import { isError } from "ts-try";
-import { parseKnownEntities } from "./hass.entities";
+import { parseKnownEntities } from "./entities";
+import { HassSource } from "./interface";
 
-function hassSource(
+export function hassSource(
   hass: HomeAssistant,
   socket: HomeAssistantWebSocket,
 ): HassSource {
@@ -37,20 +37,5 @@ function hassSource(
 
       return state$.pipe(parseKnownEntities(entityId));
     },
-  };
-}
-
-export type HassDriver = { source: HassSource; close: () => Promise<unknown> };
-
-export async function hassDriver(
-  token: string,
-  url: string = "http://localhost:8123",
-): Promise<HassDriver> {
-  const hass = new HomeAssistant(token, url);
-  const socket = await hass.getWebsocket();
-
-  return {
-    close: socket.close.bind(socket),
-    source: hassSource(hass, socket),
   };
 }

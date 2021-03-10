@@ -1,5 +1,5 @@
 import { debugObserver, initHass } from "./index";
-import { hassDriver } from "../src/driver/hass";
+import { hassDriver } from "../src";
 import { KnownEntities } from "hasso";
 import { map, skip, take } from "rxjs/operators";
 import { concat, zip } from "rxjs";

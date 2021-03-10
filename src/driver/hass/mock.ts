@@ -1,5 +1,5 @@
-import { HassSource } from "./hass.source";
 import { Observable, of } from "rxjs";
+import { HassSource } from "./interface";
 
 export function hassSourceMock<T>(
   entities: Map<string, Observable<T>> = new Map(),

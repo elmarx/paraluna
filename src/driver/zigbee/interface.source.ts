@@ -6,8 +6,8 @@ import {
   LED1624G9Source,
   LED1836G9Source,
   LED1903C5LED1835C6Source,
-} from "../devices";
-import { BridgeState, DeviceInformation } from "./zigbee.bride";
+} from "../../devices";
+import { BridgeState, DeviceInformation } from "./interface";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -22,26 +22,32 @@ export interface ZigbeeSource {
    * validation if the payload matches the type
    */
   device<T>(friendlyName: string): Observable<T>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI bulb E27 WW 806lm",
   ): Observable<LED1836G9Source>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI on/off switch",
   ): Observable<E1743Source>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI bulb E14 WS 470lm",
   ): Observable<LED1903C5LED1835C6Source>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI remote control",
   ): Observable<E1524E1810Source>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI motion sensor",
   ): Observable<E1525E1745Source>;
+
   device(
     friendlyName: string,
     modelId: "TRADFRI bulb E14 CWS opal 600lm",
@@ -62,5 +68,6 @@ export interface ZigbeeSource {
    * @see https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgedevices
    */
   deviceInfo(friendlyName: string): Observable<DeviceInformation | null>;
+
   deviceInfos(): Observable<DeviceInformation[]>;
 }

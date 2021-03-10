@@ -1,6 +1,6 @@
 import { Observable, of } from "rxjs";
-import { ZigbeeSource } from "./zigbee.source";
-import { BridgeState, DeviceInformation } from "./zigbee.bride";
+import { BridgeState, DeviceInformation } from "./interface.bridge";
+import { ZigbeeSource } from "./interface.source";
 
 export function zigbeeSourceMock<T>(
   devices: Map<string, Observable<T>> = new Map(),
