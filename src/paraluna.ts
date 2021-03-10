@@ -20,5 +20,16 @@ export function paraluna(main: MainFn, driver: Driver) {
     hass: driver.hass.source,
   });
 
+  process.on("SIGTERM", async () => {
+    try {
+      await driver.hass.close();
+      await driver.zigbee.close();
+      process.exit();
+    } catch (e) {
+      console.error(e);
+      process.exit(1);
+    }
+  });
+
   result.forEach(driver.zigbee.sink);
 }

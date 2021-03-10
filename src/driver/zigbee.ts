@@ -78,7 +78,11 @@ function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
 }
 
 export type ZigbeeSink = (sink: ZigbeeDeviceSink) => void;
-export type ZigbeeDriver = { source: ZigbeeSource; sink: ZigbeeSink };
+export type ZigbeeDriver = {
+  source: ZigbeeSource;
+  sink: ZigbeeSink;
+  close: () => Promise<void>;
+};
 
 /**
  * typeguard to distinguish MqttDriver and AsyncMqttClient for ergonomic initialization of the zigbeeDriver
@@ -95,6 +99,7 @@ export function zigbeeDriver(mqtt: MqttDriver | AsyncMqttClient): ZigbeeDriver {
   const mqttD = isMqttDriver(mqtt) ? mqtt : mqttDriver(mqtt);
 
   return {
+    close: mqttD.close,
     source: zigbeeSource(mqttD.source),
     sink: zigbeeSink(mqttD.sink),
   };

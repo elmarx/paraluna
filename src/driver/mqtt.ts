@@ -69,10 +69,15 @@ export interface MqttSource {
    */
   topic(name: string): Observable<MqttMessage>;
 }
-export type MqttDriver = { source: MqttSource; sink: MqttSink };
+export type MqttDriver = {
+  source: MqttSource;
+  sink: MqttSink;
+  close: () => Promise<void>;
+};
 
 export function mqttDriver(client: AsyncMqttClient): MqttDriver {
   return {
+    close: client.end.bind(client),
     source: mqttSource(client),
     sink: mqttSink(client),
   };

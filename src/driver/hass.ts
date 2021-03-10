@@ -11,8 +11,6 @@ import { filter, map, switchMap } from "rxjs/operators";
 import { isError } from "ts-try";
 import { parseKnownEntities } from "./hass.entities";
 
-export type HassDriver = { source: HassSource };
-
 function hassSource(
   hass: HomeAssistant,
   socket: HomeAssistantWebSocket,
@@ -42,6 +40,8 @@ function hassSource(
   };
 }
 
+export type HassDriver = { source: HassSource; close: () => Promise<unknown> };
+
 export async function hassDriver(
   token: string,
   url: string = "http://localhost:8123",
@@ -50,6 +50,7 @@ export async function hassDriver(
   const socket = await hass.getWebsocket();
 
   return {
+    close: socket.close.bind(socket),
     source: hassSource(hass, socket),
   };
 }
