@@ -9,11 +9,7 @@ import {
   ZIGBEE2MQTT_BASE_TOPIC,
 } from "./interface";
 import { AsyncMqttClient } from "async-mqtt";
-import {
-  BridgeMessage,
-  DevicesMessage,
-  ZigbeeMessage,
-} from "./interface.message";
+import { BridgeMessage, ZigbeeMessage } from "./interface.message";
 
 function subscribeFn(
   client: AsyncMqttClient,
@@ -39,6 +35,24 @@ function subscribeFn(
   };
 }
 
+function subscribeTopic(
+  client: AsyncMqttClient,
+  rawMessage$: Observable<MqttMessage>,
+  topic: string,
+) {
+  const subscriptionGrant$ = from(
+    client.subscribe(ZIGBEE2MQTT_BASE_TOPIC + "/" + topic),
+  );
+
+  return concat(
+    subscriptionGrant$.pipe(skip(1)),
+    rawMessage$.pipe(
+      filter((m) => m.topic === topic),
+      share(),
+    ),
+  ) as Observable<MqttMessage>;
+}
+
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
  */
@@ -55,6 +69,12 @@ export function zigbeeSource(
       value,
     }),
   );
+
+  const deviceInfos$ = subscribeTopic(
+    client,
+    rawMessage$,
+    "bridge/devices",
+  ).pipe(map((m): DeviceInformation[] => JSON.parse(m.value.toString())));
 
   const message$ = rawMessage$.pipe(
     map<MqttMessage, ZigbeeMessage>(
@@ -95,6 +115,7 @@ export function zigbeeSource(
 
   return {
     message$,
+    deviceInfos$,
 
     device<T>(friendlyName: string): Observable<T> {
       friendlyNames.add(friendlyName);
@@ -113,16 +134,8 @@ export function zigbeeSource(
       );
     },
 
-    deviceInfos(): Observable<DeviceInformation[]> {
-      return subscribe(
-        (m): m is DevicesMessage => m.type === "devices",
-        (m) => m.value,
-        "bridge/devices",
-      );
-    },
-
     deviceInfo(friendlyName: string): Observable<DeviceInformation | null> {
-      return this.deviceInfos().pipe(
+      return deviceInfos$.pipe(
         map<DeviceInformation[], DeviceInformation | null>(
           (devices) =>
             devices.find((d) => d.friendly_name === friendlyName) || null,

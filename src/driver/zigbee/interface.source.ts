@@ -17,6 +17,7 @@ import { ZigbeeMessage } from "./interface.message";
  */
 export interface ZigbeeSource {
   message$: Observable<ZigbeeMessage>;
+  deviceInfos$: Observable<DeviceInformation[]>;
 
   /**
    * subscribe to a zigbee device topic: zigbee2mqtt-base-topic plus friendly name
@@ -71,6 +72,4 @@ export interface ZigbeeSource {
    * @see https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgedevices
    */
   deviceInfo(friendlyName: string): Observable<DeviceInformation | null>;
-
-  deviceInfos(): Observable<DeviceInformation[]>;
 }

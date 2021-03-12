@@ -11,7 +11,7 @@ async function main(deviceFriendlyName?: string) {
     null | DeviceInformation | DeviceInformation[]
   > = deviceFriendlyName
     ? zigbee.source.deviceInfo(deviceFriendlyName)
-    : zigbee.source.deviceInfos();
+    : zigbee.source.deviceInfos$;
 
   info$
     .pipe(take(1))
