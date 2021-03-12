@@ -3,7 +3,7 @@ import {
   hassDriver,
   LED1836G9Sink,
   paraluna,
-  Sinks,
+  Result,
   Sources,
   zigbeeDriver,
   ZigbeePublish,
@@ -11,11 +11,12 @@ import {
 import { map } from "rxjs/operators";
 import { initClient, initHass } from "./index";
 import { Observable } from "rxjs";
+import { wrapZigbee } from "../src/result";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
  */
-function light(sources: Partial<Sources>): Sinks {
+function light(sources: Partial<Sources>): Observable<Result> {
   const azTriggerDimmer$: Observable<E1743Source> = sources.zigbee!.device(
     "az/trigger/dimmer",
     "TRADFRI on/off switch",
@@ -44,9 +45,7 @@ function light(sources: Partial<Sources>): Sinks {
     })),
   );
 
-  return {
-    zigbee: azDeskLight$,
-  };
+  return wrapZigbee(azDeskLight$);
 }
 
 /**

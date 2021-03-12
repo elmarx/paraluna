@@ -15,9 +15,11 @@ export type Sources = {
   zigbee: ZigbeeSource;
 };
 
-export type Sinks = {
-  zigbee: Observable<ZigbeePublish>;
+export type ZigbeeResult = {
+  zigbee: ZigbeePublish;
 };
+
+export type Result = Partial<ZigbeeResult>;
 
 export type Driver = {
   hass: HassDriver;
@@ -25,4 +27,4 @@ export type Driver = {
   zigbee: ZigbeeDriver;
 };
 
-export type MainFn = (sources: Sources) => Sinks;
+export type MainFn = (sources: Sources) => Observable<Result>;

@@ -1,4 +1,5 @@
-import { Driver, MainFn, timeDriver } from "./index";
+import { Driver, MainFn, timeDriver, ZigbeeResult } from "./index";
+import { filter, map } from "rxjs/operators";
 
 // TODO: set up typing so that it's possible to NOT pass certain drivers iff main does not require their sources
 export function paraluna(main: MainFn, driver: Driver) {
@@ -9,7 +10,12 @@ export function paraluna(main: MainFn, driver: Driver) {
     zigbee: driver.zigbee.source,
   });
 
-  driver.zigbee.sink(result.zigbee);
+  const zigbee$ = result.pipe(
+    filter((r): r is ZigbeeResult => !!r.zigbee),
+    map((r) => r.zigbee),
+  );
+
+  driver.zigbee.sink(zigbee$);
 
   process.on("SIGTERM", async () => {
     try {
