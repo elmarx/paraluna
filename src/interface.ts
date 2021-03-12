@@ -1,8 +1,9 @@
 import {
+  ClockDriver,
+  ClockSource,
   HassDriver,
   HassSource,
-  TimeDriver,
-  TimeSource,
+  TimerCommand,
   ZigbeeDriver,
   ZigbeePublish,
   ZigbeeSource,
@@ -11,7 +12,7 @@ import { Observable } from "rxjs";
 
 export type Sources = {
   hass: HassSource;
-  time: TimeSource;
+  clock: ClockSource;
   zigbee: ZigbeeSource;
 };
 
@@ -19,11 +20,15 @@ export type ZigbeeResult = {
   zigbee: ZigbeePublish;
 };
 
-export type Result = Partial<ZigbeeResult>;
+export type ClockResult = {
+  clock: TimerCommand;
+};
+
+export type Result = Partial<ZigbeeResult & ClockResult>;
 
 export type Driver = {
   hass: HassDriver;
-  time?: TimeDriver;
+  clock?: ClockDriver;
   zigbee: ZigbeeDriver;
 };
 
