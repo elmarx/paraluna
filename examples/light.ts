@@ -1,15 +1,23 @@
-import { LED1836G9Sink, paraluna, zigbeeDeviceSink } from "../src";
+import {
+  E1743Source,
+  hassDriver,
+  LED1836G9Sink,
+  paraluna,
+  Sinks,
+  Sources,
+  zigbeeDriver,
+  ZigbeePublish,
+} from "../src";
 import { map } from "rxjs/operators";
-import { initClient } from "./index";
-import { zigbeeDriver } from "../src/driver";
-import { Sources } from "../src/paraluna";
+import { initClient, initHass } from "./index";
+import { Observable } from "rxjs";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
  */
-function light(sources: Partial<Sources>) {
-  const azTriggerDimmer$ = sources.zigbee!.device(
-    "az_trigger_dimmer",
+function light(sources: Partial<Sources>): Sinks {
+  const azTriggerDimmer$: Observable<E1743Source> = sources.zigbee!.device(
+    "az/trigger/dimmer",
     "TRADFRI on/off switch",
   );
 
@@ -30,9 +38,15 @@ function light(sources: Partial<Sources>) {
         }
       },
     ),
+    map<LED1836G9Sink, ZigbeePublish>((state) => ({
+      friendlyName: "az/light/desk",
+      state,
+    })),
   );
 
-  return [zigbeeDeviceSink("az_desk_light", azDeskLight$)];
+  return {
+    zigbee: azDeskLight$,
+  };
 }
 
 /**
@@ -41,8 +55,10 @@ function light(sources: Partial<Sources>) {
 async function init() {
   const client = await initClient();
   const zigbee = zigbeeDriver(client);
+  const { hassToken, hassUrl } = initHass();
+  const hass = await hassDriver(hassToken, hassUrl);
 
-  paraluna(light, { zigbee } as any);
+  paraluna(light, { zigbee, hass });
 }
 
 if (require.main === module) {

@@ -1,31 +1,27 @@
 import { MqttMessage, MqttSink } from "../mqtt";
 import { map } from "rxjs/operators";
-import { ZIGBEE2MQTT_BASE_TOPIC, ZigbeeDeviceSink } from "./interface";
-import { Observable } from "rxjs";
+import { ZIGBEE2MQTT_BASE_TOPIC, ZigbeePublish, ZigbeeSink } from "./interface";
 
 /**
- * turn the "highlevel" zigbee-sink-properties into raw MqttMessages fed into the mqtt sink
+ * turn a zigbee publish command into an MqttMessage so it can be published by the mqttSink directly
+ * @param v
  */
-export function zigbeeSink(mqtt: MqttSink) {
-  return (deviceSink: ZigbeeDeviceSink): void => {
-    mqtt(
-      deviceSink.sink.pipe(
-        map<unknown, MqttMessage>((v) => ({
-          topic: `${ZIGBEE2MQTT_BASE_TOPIC}/${deviceSink.friendlyName}/set`,
-          value: Buffer.from(JSON.stringify(v)),
-        })),
-      ),
-    );
-  };
+function intoMqttMessage(v: ZigbeePublish): MqttMessage {
+  if (v.attribute) {
+    return {
+      topic: `${ZIGBEE2MQTT_BASE_TOPIC}/${v.friendlyName}/set/${v.attribute}`,
+      value: Buffer.from(JSON.stringify(v.state)),
+    };
+  } else {
+    return {
+      topic: `${ZIGBEE2MQTT_BASE_TOPIC}/${v.friendlyName}/set`,
+      value: Buffer.from(JSON.stringify(v.state)),
+    };
+  }
 }
 
-export function zigbeeDeviceSink<T>(
-  friendlyName: string,
-  sink: Observable<T>,
-): ZigbeeDeviceSink {
-  return {
-    type: "zigbee2mqtt",
-    friendlyName,
-    sink,
+export function zigbeeSink(mqtt: MqttSink): ZigbeeSink {
+  return (sink) => {
+    mqtt(sink.pipe(map(intoMqttMessage)));
   };
 }

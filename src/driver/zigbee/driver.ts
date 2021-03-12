@@ -20,7 +20,7 @@ export function zigbeeDriver(mqtt: MqttDriver | AsyncMqttClient): ZigbeeDriver {
 
   return {
     close: mqttD.close,
-    source: zigbeeSource(mqttD.source),
+    source: zigbeeSource(mqttD),
     sink: zigbeeSink(mqttD.sink),
   };
 }

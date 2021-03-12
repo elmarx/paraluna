@@ -1,19 +1,4 @@
-import { DeviceSink, timeDriver, TimeDriver, TimeSource } from "./index";
-import { HassDriver, HassSource, ZigbeeDriver, ZigbeeSource } from "./driver";
-
-export type Sources = {
-  hass: HassSource;
-  time: TimeSource;
-  zigbee: ZigbeeSource;
-};
-
-export type Driver = {
-  hass: HassDriver;
-  time?: TimeDriver;
-  zigbee: ZigbeeDriver;
-};
-
-export type MainFn = (sources: Sources) => DeviceSink[];
+import { Driver, MainFn, timeDriver } from "./index";
 
 // TODO: set up typing so that it's possible to NOT pass certain drivers iff main does not require their sources
 export function paraluna(main: MainFn, driver: Driver) {
@@ -23,6 +8,8 @@ export function paraluna(main: MainFn, driver: Driver) {
     time: time.source,
     zigbee: driver.zigbee.source,
   });
+
+  driver.zigbee.sink(result.zigbee);
 
   process.on("SIGTERM", async () => {
     try {
@@ -34,6 +21,4 @@ export function paraluna(main: MainFn, driver: Driver) {
       process.exit(1);
     }
   });
-
-  result.forEach(driver.zigbee.sink);
 }

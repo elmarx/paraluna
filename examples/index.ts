@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Observer } from "rxjs";
 import { AsyncMqttClient, connectAsync } from "async-mqtt";
-import { zigbeeDriver } from "../src/driver";
+import { zigbeeDriver } from "../src";
 
 export function debugObserver<T>(name?: string): Observer<T> {
   if (name) {

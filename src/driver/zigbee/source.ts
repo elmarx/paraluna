@@ -1,36 +1,62 @@
-import { MqttMessage, MqttSource } from "../mqtt";
-import { Observable } from "rxjs";
-import { distinct, map, share } from "rxjs/operators";
-import { ZigbeeSource } from "./interface.source";
-import { BridgeState, DeviceInformation } from "./interface.bridge";
-import { ZIGBEE2MQTT_BASE_TOPIC } from "./interface";
+import { MqttDriver, MqttMessage } from "../mqtt";
+import { concat, from, Observable } from "rxjs";
+import { distinct, filter, map, share, skip } from "rxjs/operators";
+import {
+  BridgeState,
+  DeviceInformation,
+  ZIGBEE2MQTT_BASE_TOPIC,
+  ZigbeeMessage,
+  ZigbeeSource,
+  ZigbeeSubscription,
+} from "./interface";
+import { buildParser } from "./source.parse";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
  */
-export function zigbeeSource(mqtt: MqttSource): ZigbeeSource {
+export function zigbeeSource(mqtt: MqttDriver): ZigbeeSource {
   return {
-    device<T>(friendlyName: string): Observable<T> {
-      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/" + friendlyName).pipe(
-        map<MqttMessage, T>(
-          (v): T =>
-            JSON.parse(v.value.toString(), (k, v) =>
-              k === "last_seen" ? new Date(v) : v,
-            ) as any,
-        ),
-        share(),
+    subscribe(
+      subscription: ZigbeeSubscription[] | ZigbeeSubscription,
+    ): Observable<ZigbeeMessage> {
+      const a = Array.isArray(subscription) ? subscription : [subscription];
+      const parser = buildParser(a);
+      const topics = [...parser.keys()].map(
+        (t) => ZIGBEE2MQTT_BASE_TOPIC + "/" + t,
       );
+
+      const subscriptionGrant$ = from(mqtt.subscribe(topics)).pipe(skip(1));
+      const message$: Observable<ZigbeeMessage> = mqtt.source.messages$.pipe(
+        filter((m) => parser.has(m.topic)),
+        map((m) => parser.get(m.topic)!(m.value)),
+      );
+
+      return concat(subscriptionGrant$, message$) as Observable<ZigbeeMessage>;
+    },
+
+    device<T>(friendlyName: string): Observable<T> {
+      return mqtt.source
+        .topic(ZIGBEE2MQTT_BASE_TOPIC + "/" + friendlyName)
+        .pipe(
+          map<MqttMessage, T>(
+            (v): T =>
+              JSON.parse(v.value.toString(), (k, v) =>
+                k === "last_seen" ? new Date(v) : v,
+              ) as any,
+          ),
+          share(),
+        );
     },
 
     state(): Observable<BridgeState> {
-      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
+      return mqtt.source.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
         map<MqttMessage, BridgeState>(({ value }) => value.toString() as any),
         share(),
       );
     },
 
     deviceInfos(): Observable<DeviceInformation[]> {
-      return mqtt.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/devices").pipe(
+      return mqtt.source.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/devices").pipe(
         map<MqttMessage, DeviceInformation[]>(({ value }) =>
           JSON.parse(value.toString()),
         ),

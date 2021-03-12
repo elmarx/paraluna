@@ -7,7 +7,12 @@ import {
   LED1836G9Source,
   LED1903C5LED1835C6Source,
 } from "../../devices";
-import { BridgeState, DeviceInformation } from "./interface";
+import {
+  BridgeState,
+  DeviceInformation,
+  ZigbeeMessage,
+  ZigbeeSubscription,
+} from "./interface";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -15,6 +20,14 @@ import { BridgeState, DeviceInformation } from "./interface";
  * TODO: use conditional types/dependent types for a cleaner/modularized solution
  */
 export interface ZigbeeSource {
+  /**
+   * subscribe to arbitrary
+   * @param subscription
+   */
+  subscribe(
+    subscription: ZigbeeSubscription[] | ZigbeeSubscription,
+  ): Observable<ZigbeeMessage>;
+
   /**
    * subscribe to a zigbee device topic: zigbee2mqtt-base-topic plus friendly name
    *
