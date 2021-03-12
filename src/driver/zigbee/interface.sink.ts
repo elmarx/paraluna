@@ -1,7 +1,18 @@
 import { Observable } from "rxjs";
+import { JsonValue } from "../../json";
 
-export type ZigbeeDeviceSink = {
-  type: "zigbee2mqtt";
+export type ZigbeeSubscription = {
   friendlyName: string;
-  sink: Observable<unknown>;
+  attribute?: string;
+};
+
+export type ZigbeePublish = {
+  friendlyName: string;
+  attribute?: string;
+  state: JsonValue;
+};
+
+export type ZigbeeResult = {
+  publish$: Observable<ZigbeePublish>;
+  subscriptions?: ZigbeeSubscription[];
 };

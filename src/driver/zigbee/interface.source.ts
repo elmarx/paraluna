@@ -8,6 +8,7 @@ import {
   LED1903C5LED1835C6Source,
 } from "../../devices";
 import { BridgeState, DeviceInformation } from "./interface";
+import { ZigbeeMessage } from "./interface.message";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -15,6 +16,8 @@ import { BridgeState, DeviceInformation } from "./interface";
  * TODO: use conditional types/dependent types for a cleaner/modularized solution
  */
 export interface ZigbeeSource {
+  message$: Observable<ZigbeeMessage>;
+
   /**
    * subscribe to a zigbee device topic: zigbee2mqtt-base-topic plus friendly name
    *

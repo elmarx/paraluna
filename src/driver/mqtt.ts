@@ -1,5 +1,5 @@
 import { AsyncMqttClient } from "async-mqtt";
-import { concat, from, fromEvent, Observable } from "rxjs";
+import { concat, from, fromEvent, Observable, Observer } from "rxjs";
 import { filter, share, skip } from "rxjs/operators";
 import { isError, tryF } from "ts-try";
 
@@ -8,25 +8,29 @@ export type MqttMessage = {
   value: Buffer;
 };
 
+export function mqttObserver(client: AsyncMqttClient): Observer<MqttMessage> {
+  return {
+    complete(): void {
+      console.log("MQTT Sink completed");
+    },
+    error(err: any): void {
+      console.error("MQTT Sink error: ", err);
+    },
+    async next(value: MqttMessage): Promise<void> {
+      const result = await tryF(client.publish(value.topic, value.value));
+      if (isError(result)) {
+        console.log("MQTT Sink publish error", result);
+      }
+    },
+  };
+}
+
 /**
  * attach an observer that publishes to the mqtt clinet
  */
 function mqttSink(client: AsyncMqttClient) {
   return (s: Observable<MqttMessage>): void => {
-    s.subscribe({
-      complete(): void {
-        console.log("MQTT Sink completed");
-      },
-      error(err: any): void {
-        console.error("MQTT Sink error: ", err);
-      },
-      async next(value: MqttMessage): Promise<void> {
-        const result = await tryF(client.publish(value.topic, value.value));
-        if (isError(result)) {
-          console.log("MQTT Sink publish error", result);
-        }
-      },
-    });
+    s.subscribe(mqttObserver(client));
   };
 }
 

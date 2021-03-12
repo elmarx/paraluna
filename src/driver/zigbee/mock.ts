@@ -1,13 +1,16 @@
-import { Observable, of } from "rxjs";
-import { BridgeState, DeviceInformation } from "./interface.bridge";
+import { EMPTY, Observable } from "rxjs";
 import { ZigbeeSource } from "./interface.source";
+import { DeviceAttributeMessage, DeviceMessage } from "./interface.message";
+import { BridgeState, DeviceInformation } from "./interface.bridge";
 
-export function zigbeeSourceMock<T>(
-  devices: Map<string, Observable<T>> = new Map(),
+export function zigbeeSourceMock(
+  message$: Observable<DeviceMessage | DeviceAttributeMessage> = EMPTY,
 ): ZigbeeSource {
   return {
-    device(friendlyName: string): any {
-      return devices.get(friendlyName) || of();
+    message$,
+
+    device(_friendlyName: string): any {
+      throw new Error("not yet implemented");
     },
     deviceInfo(_friendlyName: string): Observable<DeviceInformation | null> {
       throw new Error("not yet implemented");
