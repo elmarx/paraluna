@@ -7,3 +7,5 @@ export * from "./ikea.trigger";
 export * from "./light";
 export * from "./light.sink";
 export * from "./light.source";
+
+export * from "./switch";

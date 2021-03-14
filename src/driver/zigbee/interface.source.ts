@@ -6,6 +6,7 @@ import {
   LED1624G9Source,
   LED1836G9Source,
   LED1903C5LED1835C6Source,
+  PowerSwitchSource,
 } from "../../devices";
 import {
   BridgeState,
@@ -65,6 +66,11 @@ export interface ZigbeeSource {
     friendlyName: string,
     modelId: "TRADFRI bulb E14 CWS opal 600lm",
   ): Observable<LED1624G9Source>;
+
+  device(
+    friendlyName: string,
+    modelId: "Plug 01",
+  ): Observable<PowerSwitchSource>;
 
   /**
    * current state of the bridge
