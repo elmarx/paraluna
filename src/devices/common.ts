@@ -4,4 +4,5 @@ export type DeviceBattery = { battery: number };
 
 export type Transistion = { transition: number };
 
-export type SwitchState = { state: "ON" | "OFF" | "TOGGLE" };
+export type SwitchStateSink = { state: "ON" | "OFF" | "TOGGLE" };
+export type SwitchStateSource = { state: "ON" | "OFF" };

@@ -1,7 +1,12 @@
-import { DeviceLastSeen, DeviceLinkquality, SwitchState } from "./common";
+import {
+  DeviceLastSeen,
+  DeviceLinkquality,
+  SwitchStateSink,
+  SwitchStateSource,
+} from "./common";
 
 export type PowerSwitchSource = DeviceLastSeen &
   DeviceLinkquality &
-  SwitchState;
+  SwitchStateSource;
 
-export type PowerSwitchSink = SwitchState;
+export type PowerSwitchSink = SwitchStateSink;

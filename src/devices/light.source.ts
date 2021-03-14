@@ -1,19 +1,19 @@
 import { LightBrightness, LightColor, LightColorTemp } from "./light";
-import { DeviceLastSeen, DeviceLinkquality, SwitchState } from "./common";
+import { DeviceLastSeen, DeviceLinkquality, SwitchStateSource } from "./common";
 
 export type DimmableLightSource = DeviceLastSeen &
   DeviceLinkquality &
   LightBrightness &
-  SwitchState;
+  SwitchStateSource;
 
 export type TunableWhiteLightSource = DeviceLastSeen &
   DeviceLinkquality &
   LightBrightness &
   LightColorTemp &
-  SwitchState;
+  SwitchStateSource;
 
 export type ColorLightSource = DeviceLastSeen &
   DeviceLinkquality &
   LightBrightness &
   LightColor &
-  SwitchState;
+  SwitchStateSource;
