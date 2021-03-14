@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import {
   BridgeState,
   DeviceInformation,
+  DeviceMessage,
   ZigbeeMessage,
   ZigbeeSubscription,
 } from "./interface";
@@ -33,6 +34,18 @@ export interface ZigbeeSource {
     friendlyName: string,
     modelId: M,
   ): Observable<DeviceSource<M>>;
+
+  /**
+   * just like device(): subscribe to a device, but return a DeviceMessage (i.e.: the value/state/payload together
+   * with the friendly device name).
+   *
+   * So it's something between subscribe() and device()
+   */
+  deviceMessage<T>(friendlyName: string): Observable<DeviceMessage<T>>;
+  deviceMessage<M extends string>(
+    friendlyName: string,
+    modelId: M,
+  ): Observable<DeviceMessage<DeviceSource<M>>>;
 
   /**
    * current state of the bridge

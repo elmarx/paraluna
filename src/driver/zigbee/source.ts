@@ -4,12 +4,14 @@ import { distinct, filter, map, share, skip } from "rxjs/operators";
 import {
   BridgeState,
   DeviceInformation,
+  DeviceMessage,
   ZIGBEE2MQTT_BASE_TOPIC,
   ZigbeeMessage,
   ZigbeeSource,
   ZigbeeSubscription,
 } from "./interface";
 import { buildParser } from "./source.parse";
+import { JsonObject } from "../../json";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
@@ -46,6 +48,16 @@ export function zigbeeSource(mqtt: MqttDriver): ZigbeeSource {
           ),
           share(),
         );
+    },
+
+    deviceMessage(friendlyName: string): Observable<DeviceMessage> {
+      return this.device<JsonObject>(friendlyName).pipe(
+        map<JsonObject, DeviceMessage>((m) => ({
+          type: "device",
+          friendlyName,
+          state: m,
+        })),
+      );
     },
 
     state(): Observable<BridgeState> {
