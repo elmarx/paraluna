@@ -9,12 +9,12 @@ export type ZigbeeDevice = {
 export type ZigbeeSinglePublish = {
   friendlyName: string;
   attribute?: string;
-  state: JsonValue;
+  value: JsonValue;
 };
 
 export type ZigbeeMulitPublish = {
   topic: string[] | ZigbeeDevice[];
-  state: JsonValue;
+  value: JsonValue;
 };
 
 export type ZigbeePublish = ZigbeeSinglePublish | ZigbeeMulitPublish;

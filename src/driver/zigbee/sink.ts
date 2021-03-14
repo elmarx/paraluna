@@ -33,13 +33,13 @@ function into(
  */
 function intoMqttMessage(v: ZigbeePublish): MqttMessage[] {
   if (isZigbeeSinglePublish(v)) {
-    return [into(v.state, v.friendlyName, v.attribute)];
+    return [into(v.value, v.friendlyName, v.attribute)];
   }
 
   return v.topic.map((t: string | ZigbeeDevice) =>
     typeof t === "string"
-      ? into(v.state, t)
-      : into(v.state, t.friendlyName, t.attribute),
+      ? into(v.value, t)
+      : into(v.value, t.friendlyName, t.attribute),
   );
 }
 

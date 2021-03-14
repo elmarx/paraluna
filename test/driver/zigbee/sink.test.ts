@@ -6,12 +6,12 @@ describe("sending ZigbeeMultiPublish messages", () => {
   test("with devices as strings", (done) => {
     const sample: ZigbeePublish = {
       topic: ["light_a", "light_b", "light_c"],
-      state: { state: "ON" },
+      value: { state: "ON" },
     };
 
     const expected = sample.topic.map((topic: any) => ({
       topic: `zigbee2mqtt/${topic}/set`,
-      value: sample.state,
+      value: sample.value,
     }));
 
     zigbeeSink(async (s) => {

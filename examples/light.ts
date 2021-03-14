@@ -41,7 +41,7 @@ function light(sources: Partial<Sources>): Observable<Result> {
     ),
     map<LED1836G9Sink, ZigbeePublish>((state) => ({
       friendlyName: "az/light/desk",
-      state,
+      value: state,
     })),
   );
 
