@@ -9,3 +9,5 @@ export * from "./light.sink";
 export * from "./light.source";
 
 export * from "./switch";
+
+export * from "./sources";

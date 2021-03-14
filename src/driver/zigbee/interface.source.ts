@@ -1,19 +1,12 @@
 import { Observable } from "rxjs";
 import {
-  E1524E1810Source,
-  E1525E1745Source,
-  E1743Source,
-  LED1624G9Source,
-  LED1836G9Source,
-  LED1903C5LED1835C6Source,
-  PowerSwitchSource,
-} from "../../devices";
-import {
   BridgeState,
   DeviceInformation,
   ZigbeeMessage,
   ZigbeeSubscription,
 } from "./interface";
+import { DeviceSource } from "../../devices";
+import { JsonObject } from "../../json";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -35,42 +28,11 @@ export interface ZigbeeSource {
    * It revives the "last_seen" date if present, but does no further processing, especially no
    * validation if the payload matches the type
    */
-  device<T>(friendlyName: string): Observable<T>;
-
-  device(
+  device<T extends JsonObject>(friendlyName: string): Observable<T>;
+  device<M extends string>(
     friendlyName: string,
-    modelId: "TRADFRI bulb E27 WW 806lm",
-  ): Observable<LED1836G9Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "TRADFRI on/off switch",
-  ): Observable<E1743Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "TRADFRI bulb E14 WS 470lm",
-  ): Observable<LED1903C5LED1835C6Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "TRADFRI remote control",
-  ): Observable<E1524E1810Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "TRADFRI motion sensor",
-  ): Observable<E1525E1745Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "TRADFRI bulb E14 CWS opal 600lm",
-  ): Observable<LED1624G9Source>;
-
-  device(
-    friendlyName: string,
-    modelId: "Plug 01",
-  ): Observable<PowerSwitchSource>;
+    modelId: M,
+  ): Observable<DeviceSource<M>>;
 
   /**
    * current state of the bridge

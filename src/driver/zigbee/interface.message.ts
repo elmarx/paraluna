@@ -1,10 +1,10 @@
-import { JsonObject } from "../../json";
 import { BridgeState, DeviceInformation } from "./interface.bridge";
+import { JsonObject } from "../../json";
 
-export type DeviceMessage = {
+export type DeviceMessage<S = JsonObject> = {
   type: "device";
   friendlyName: string;
-  state: JsonObject;
+  state: S;
 };
 
 export type DeviceAttributeMessage = {
