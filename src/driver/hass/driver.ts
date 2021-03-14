@@ -1,8 +1,10 @@
 import { HomeAssistant } from "hasso";
 import { hassSource } from "./source";
 import { HassDriver } from "./interface";
+import { Logger } from "winston";
 
 export async function hassDriver(
+  logger: Logger,
   token: string,
   url: string = "http://localhost:8123",
 ): Promise<HassDriver> {
@@ -11,6 +13,6 @@ export async function hassDriver(
 
   return {
     close: socket.close.bind(socket),
-    source: hassSource(hass, socket),
+    source: hassSource(logger.child({ direction: "source" }), hass, socket),
   };
 }

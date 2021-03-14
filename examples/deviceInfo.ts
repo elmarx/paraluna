@@ -1,11 +1,14 @@
 import { DeviceInformation, zigbeeDriver } from "../src";
-import { debugObserver, initClient } from "./index";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { connectAsync } from "async-mqtt";
+import { initMqttOptions } from "./index";
+import { debugObserver, LOGGER } from "./logging";
 
 async function main(deviceFriendlyName?: string) {
-  const client = await initClient();
-  const zigbee = zigbeeDriver(client);
+  const client = await connectAsync(undefined, initMqttOptions());
+
+  const zigbee = zigbeeDriver(LOGGER, client);
 
   const info$: Observable<
     null | DeviceInformation | DeviceInformation[]

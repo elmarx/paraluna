@@ -1,6 +1,7 @@
 import { ZigbeePublish, zigbeeSink } from "../../../src";
 import { of } from "rxjs";
 import { map, scan } from "rxjs/operators";
+import { logger } from "../../helper";
 
 describe("sending ZigbeeMultiPublish messages", () => {
   test("with devices as strings", (done) => {
@@ -14,7 +15,7 @@ describe("sending ZigbeeMultiPublish messages", () => {
       value: sample.value,
     }));
 
-    zigbeeSink(async (s) => {
+    zigbeeSink(logger(), async (s) => {
       const result = await s
         .pipe(
           map(({ topic, value }) => ({

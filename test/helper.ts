@@ -1,4 +1,5 @@
 import { concat, Observable } from "rxjs";
+import winston, { Logger } from "winston";
 
 /**
  * of() with values that will are 'current value' of the stream for a given duration
@@ -28,4 +29,8 @@ export function v<T>(
   duration?: number,
 ): { value: T; duration?: number } {
   return { value, duration };
+}
+
+export function logger(): Logger {
+  return winston.createLogger();
 }

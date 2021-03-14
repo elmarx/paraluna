@@ -12,11 +12,12 @@ import {
 } from "./interface";
 import { buildParser } from "./source.parse";
 import { JsonObject } from "../../json";
+import { Logger } from "winston";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
  */
-export function zigbeeSource(mqtt: MqttDriver): ZigbeeSource {
+export function zigbeeSource(_logger: Logger, mqtt: MqttDriver): ZigbeeSource {
   return {
     subscribe(
       subscription: ZigbeeSubscription[] | ZigbeeSubscription,

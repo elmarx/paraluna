@@ -10,8 +10,10 @@ import { filter, map, switchMap } from "rxjs/operators";
 import { isError } from "ts-try";
 import { parseKnownEntities } from "./entities";
 import { HassSource } from "./interface";
+import { Logger } from "winston";
 
 export function hassSource(
+  _logger: Logger,
   hass: HomeAssistant,
   socket: HomeAssistantWebSocket,
 ): HassSource {

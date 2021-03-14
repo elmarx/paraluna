@@ -1,17 +1,17 @@
 import {
   E1743Source,
-  hassDriver,
+  initDriver,
   LED1836G9Sink,
   paraluna,
   Result,
   Sources,
-  zigbeeDriver,
+  wrapZigbee,
   ZigbeePublish,
 } from "../src";
 import { map } from "rxjs/operators";
-import { initClient, initHass } from "./index";
+import { initHass, initMqttOptions } from "./index";
 import { Observable } from "rxjs";
-import { wrapZigbee } from "../src/result";
+import { LOGGER } from "./logging";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
@@ -52,12 +52,12 @@ function light(sources: Partial<Sources>): Observable<Result> {
  * initialize driver and kick off paraluna (which wires together sources, sinks and main function)
  */
 async function init() {
-  const client = await initClient();
-  const zigbee = zigbeeDriver(client);
-  const { hassToken, hassUrl } = initHass();
-  const hass = await hassDriver(hassToken, hassUrl);
+  const mqttOptions = initMqttOptions();
+  const hassOptions = initHass();
 
-  paraluna(light, { zigbee, hass });
+  const driver = await initDriver(LOGGER, mqttOptions, hassOptions);
+
+  paraluna(LOGGER, light, driver);
 }
 
 if (require.main === module) {

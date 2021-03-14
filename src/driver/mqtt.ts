@@ -3,6 +3,7 @@ import { concat, from, fromEvent, Observable } from "rxjs";
 import { filter, share, skip } from "rxjs/operators";
 import { isError, tryF } from "ts-try";
 import { ISubscriptionGrant } from "mqtt";
+import { Logger } from "winston";
 
 export type MqttMessage = {
   topic: string;
@@ -12,19 +13,19 @@ export type MqttMessage = {
 /**
  * attach an observer that publishes to the mqtt clinet
  */
-function mqttSink(client: AsyncMqttClient) {
+function mqttSink(logger: Logger, client: AsyncMqttClient) {
   return (s: Observable<MqttMessage>): void => {
     s.subscribe({
       complete(): void {
-        console.log("MQTT Sink completed");
+        logger.info("MQTT Sink completed");
       },
       error(err: any): void {
-        console.error("MQTT Sink error: ", err);
+        logger.error("MQTT Sink error: ", err);
       },
       async next(value: MqttMessage): Promise<void> {
         const result = await tryF(client.publish(value.topic, value.value));
         if (isError(result)) {
-          console.log("MQTT Sink publish error", result);
+          logger.error("MQTT Sink publish error", result);
         }
       },
     });
@@ -34,7 +35,7 @@ function mqttSink(client: AsyncMqttClient) {
 /**
  * generic mqtt source
  */
-function mqttSource(client: AsyncMqttClient): MqttSource {
+function mqttSource(_logger: Logger, client: AsyncMqttClient): MqttSource {
   const messages$ = fromEvent(
     client,
     "message",
@@ -84,11 +85,14 @@ export type MqttDriver = {
   subscribe: (topic: string | string[]) => Promise<ISubscriptionGrant[]>;
 };
 
-export function mqttDriver(client: AsyncMqttClient): MqttDriver {
+export function mqttDriver(
+  logger: Logger,
+  client: AsyncMqttClient,
+): MqttDriver {
   return {
     close: client.end.bind(client),
     subscribe: client.subscribe.bind(client),
-    source: mqttSource(client),
-    sink: mqttSink(client),
+    source: mqttSource(logger.child({ direction: "source" }), client),
+    sink: mqttSink(logger.child({ direction: "sink" }), client),
   };
 }

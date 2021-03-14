@@ -1,9 +1,10 @@
-import { debugObserver, initHass } from "./index";
+import { initHass } from "./index";
 import { hassDriver } from "../src";
 import { KnownEntities } from "hasso";
 import { map, skip, take } from "rxjs/operators";
 import { concat, zip } from "rxjs";
 import { diffString } from "json-diff";
+import { debugObserver, LOGGER } from "./logging";
 
 /**
  * show usage of the hass source. Extended to match the "sun" example of hasso,
@@ -11,7 +12,7 @@ import { diffString } from "json-diff";
  */
 async function sun() {
   const { hassToken, hassUrl } = initHass();
-  const hass = await hassDriver(hassToken, hassUrl);
+  const hass = await hassDriver(LOGGER, hassToken, hassUrl);
 
   const sun$ = hass.source.state(KnownEntities.Sun);
   const sunPrevious$ = sun$.pipe(skip(1));

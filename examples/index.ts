@@ -1,25 +1,9 @@
 import assert from "assert";
-import { Observer } from "rxjs";
-import { AsyncMqttClient, connectAsync } from "async-mqtt";
+import { connectAsync, IClientOptions } from "async-mqtt";
 import { zigbeeDriver } from "../src";
+import { debugObserver, LOGGER } from "./logging";
 
-export function debugObserver<T>(name?: string): Observer<T> {
-  if (name) {
-    return {
-      error: (error) => console.error("⚠️", `[${name}]`, error),
-      next: (value) => console.log("▶️", `[${name}]`, value),
-      complete: () => console.log("⏹", `[${name}]`, "completed"),
-    };
-  }
-
-  return {
-    error: (error) => console.error("⚠️", error),
-    next: (value) => console.log("▶️", value),
-    complete: () => console.log("⏹", "completed️"),
-  };
-}
-
-export function initClient(): Promise<AsyncMqttClient> {
+export function initMqttOptions(): IClientOptions {
   const mqttHost = process.env.MQTT_HOST;
   const mqttUser = process.env.MQTT_USER;
   const mqttPassword = process.env.MQTT_PASSWORD;
@@ -28,11 +12,11 @@ export function initClient(): Promise<AsyncMqttClient> {
   assert(mqttUser);
   assert(mqttPassword);
 
-  return connectAsync(undefined, {
+  return {
     host: mqttHost,
     username: mqttUser,
     password: mqttPassword,
-  });
+  };
 }
 
 export function initHass(): { hassToken: string; hassUrl: string } {
@@ -49,8 +33,8 @@ export function initHass(): { hassToken: string; hassUrl: string } {
  * initialize the zigbee2mqtt source/driver and subscribe to the bridge-state topic ("online" or "offline") printing to console
  */
 async function main() {
-  const client = await initClient();
-  const zigbee = zigbeeDriver(client);
+  const client = await connectAsync(undefined, initMqttOptions());
+  const zigbee = zigbeeDriver(LOGGER, client);
 
   zigbee.source.state().subscribe(debugObserver("zigbee2mqtt"));
 }

@@ -8,6 +8,7 @@ import {
 } from "./interface";
 import { isZigbeeSinglePublish } from "./guards";
 import { JsonValue } from "../../json";
+import { Logger } from "winston";
 
 function into(
   state: JsonValue,
@@ -43,7 +44,7 @@ function intoMqttMessage(v: ZigbeePublish): MqttMessage[] {
   );
 }
 
-export function zigbeeSink(mqtt: MqttSink): ZigbeeSink {
+export function zigbeeSink(_logger: Logger, mqtt: MqttSink): ZigbeeSink {
   return (sink) => {
     mqtt(sink.pipe(mergeMap(intoMqttMessage)));
   };
