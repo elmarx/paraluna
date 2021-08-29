@@ -21,22 +21,22 @@
     "README.md"
   ],
   "devDependencies": {
-    "@types/jest": "^26.0.20",
+    "@types/jest": "^27.0.1",
     "@types/json-diff": "^0.5.1",
-    "@types/node": "^14.14.31",
-    "jest": "^26.6.3",
+    "@types/node": "^16.7.5",
+    "jest": "^27.1.0",
     "json-diff": "^0.5.4",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
-    "ts-jest": "^26.5.1",
-    "ts-node": "^9.1.1",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
     "typescript": "^4.1.5",
     "winston": "^3.3.3"
   },
   "dependencies": {
     "async-mqtt": "^2.6.1",
     "hasso": "^0.3.0",
-    "rxjs": "^6.6.3",
+    "rxjs": "^7.3.0",
     "ts-try": "^0.2.0"
   },
   "peerDependencies": {
