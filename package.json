@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/json-diff": "^0.5.1",
-    "@types/node": "^16.7.5",
+    "@types/node": "^17.0.4",
     "jest": "^27.1.0",
     "json-diff": "^0.5.4",
     "nodemon": "^2.0.7",
