@@ -7,11 +7,11 @@ import {
   ZigbeeSink,
 } from "./interface";
 import { isZigbeeSinglePublish } from "./guards";
-import { JsonValue } from "../../json";
 import { Logger } from "winston";
+import { Json } from "fp-ts/Json";
 
 function into(
-  state: JsonValue,
+  state: Json,
   friendlyName: string,
   attribute?: string,
 ): MqttMessage {

@@ -1,7 +1,7 @@
 import { BridgeState, DeviceInformation } from "./interface.bridge";
-import { JsonObject } from "../../json";
+import { JsonRecord } from "fp-ts/Json";
 
-export type DeviceMessage<S = JsonObject> = {
+export type DeviceMessage<S = JsonRecord> = {
   type: "device";
   friendlyName: string;
   state: S;

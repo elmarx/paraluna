@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { JsonValue } from "../../json";
+import { Json } from "fp-ts/Json";
 
 export type ZigbeeDevice = {
   friendlyName: string;
@@ -9,12 +9,12 @@ export type ZigbeeDevice = {
 export type ZigbeeSinglePublish = {
   friendlyName: string;
   attribute?: string;
-  value: JsonValue;
+  value: Json;
 };
 
 export type ZigbeeMulitPublish = {
   topic: string[] | ZigbeeDevice[];
-  value: JsonValue;
+  value: Json;
 };
 
 export type ZigbeePublish = ZigbeeSinglePublish | ZigbeeMulitPublish;

@@ -11,8 +11,8 @@ import {
   ZigbeeSubscription,
 } from "./interface";
 import { buildParser } from "./source.parse";
-import { JsonObject } from "../../json";
 import { Logger } from "winston";
+import { JsonRecord } from "fp-ts/Json";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
@@ -52,8 +52,8 @@ export function zigbeeSource(_logger: Logger, mqtt: MqttDriver): ZigbeeSource {
     },
 
     deviceMessage(friendlyName: string): Observable<DeviceMessage> {
-      return this.device<JsonObject>(friendlyName).pipe(
-        map<JsonObject, DeviceMessage>((m) => ({
+      return this.device<JsonRecord>(friendlyName).pipe(
+        map<JsonRecord, DeviceMessage>((m) => ({
           type: "device",
           friendlyName,
           state: m,

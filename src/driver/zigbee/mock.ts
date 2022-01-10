@@ -7,8 +7,8 @@ import {
   ZigbeeSource,
   ZigbeeSubscription,
 } from "./interface";
-import { JsonObject } from "../../json";
 import { map } from "rxjs/operators";
+import { JsonRecord } from "fp-ts/Json";
 
 export function zigbeeSourceMock<T>(
   devices: Map<string, Observable<T>> = new Map(),
@@ -25,8 +25,8 @@ export function zigbeeSourceMock<T>(
       return devices.get(friendlyName) || EMPTY;
     },
     deviceMessage(friendlyName: string): Observable<DeviceMessage> {
-      return this.device<JsonObject>(friendlyName).pipe(
-        map<JsonObject, DeviceMessage>((m) => ({
+      return this.device<JsonRecord>(friendlyName).pipe(
+        map<JsonRecord, DeviceMessage>((m) => ({
           type: "device",
           friendlyName,
           state: m,

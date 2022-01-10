@@ -6,7 +6,7 @@ import {
 import { E1524E1810Source, E1743Source } from "./ikea.trigger";
 import { E1525E1745Source } from "./ikea.sensor";
 import { PowerSwitchSource } from "./switch";
-import { JsonObject } from "../json";
+import { JsonRecord } from "fp-ts/Json";
 
 export type DeviceSource<M> = M extends "TRADFRI bulb E27 WW 806lm"
   ? LED1836G9Source
@@ -24,4 +24,4 @@ export type DeviceSource<M> = M extends "TRADFRI bulb E27 WW 806lm"
   ? LED1624G9Source
   : M extends "Plug 01"
   ? PowerSwitchSource
-  : JsonObject;
+  : JsonRecord;

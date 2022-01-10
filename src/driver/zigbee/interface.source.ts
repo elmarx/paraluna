@@ -7,7 +7,7 @@ import {
   ZigbeeSubscription,
 } from "./interface";
 import { DeviceSource } from "../../devices";
-import { JsonObject } from "../../json";
+import { JsonRecord } from "fp-ts/Json";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
@@ -29,7 +29,7 @@ export interface ZigbeeSource {
    * It revives the "last_seen" date if present, but does no further processing, especially no
    * validation if the payload matches the type
    */
-  device<T extends JsonObject>(friendlyName: string): Observable<T>;
+  device<T extends JsonRecord>(friendlyName: string): Observable<T>;
   device<M extends string>(
     friendlyName: string,
     modelId: M,

@@ -7,8 +7,6 @@ import {
 } from "./driver";
 import { Observable } from "rxjs";
 
-export * from "./json";
-
 export type Sources = {
   hass: HassSource;
   zigbee: ZigbeeSource;
