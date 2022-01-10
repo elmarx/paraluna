@@ -12,22 +12,16 @@ import { connectAsync, IClientOptions } from "async-mqtt";
 /**
  * initialize all drivers
  * @param mqttOptions
- * @param hassoOptions
  * @param logger
  */
 export async function initDriver(
   logger: Logger,
   mqttOptions: IClientOptions,
-  hassoOptions: { hassToken: string; hassUrl: string },
 ): Promise<Driver> {
   const mqttClient = await connectAsync(undefined, mqttOptions);
 
   const zigbee = zigbeeDriver(logger.child({ driver: "zigbee" }), mqttClient);
-  const hass = await hassDriver(
-    logger.child({ driver: "hass" }),
-    hassoOptions.hassToken,
-    hassoOptions.hassUrl,
-  );
+  const hass = await hassDriver(logger.child({ driver: "hass" }));
 
   return {
     zigbee,

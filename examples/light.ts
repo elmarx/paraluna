@@ -9,7 +9,7 @@ import {
   ZigbeePublish,
 } from "../src";
 import { map } from "rxjs/operators";
-import { initHass, initMqttOptions } from "./index";
+import { initMqttOptions } from "./index";
 import { Observable } from "rxjs";
 import { LOGGER } from "./logging";
 
@@ -23,22 +23,20 @@ function light(sources: Partial<Sources>): Observable<Result> {
   );
 
   const azDeskLight$ = azTriggerDimmer$.pipe(
-    map(
-      (v): LED1836G9Sink => {
-        switch (v.action) {
-          case "on":
-            return { state: "ON" };
-          case "off":
-            return { state: "OFF" };
-          case "brightness_move_up":
-          case "brightness_move_down":
-          case undefined:
-            return { brightness: v.brightness };
-          default:
-            return {};
-        }
-      },
-    ),
+    map((v): LED1836G9Sink => {
+      switch (v.action) {
+        case "on":
+          return { state: "ON" };
+        case "off":
+          return { state: "OFF" };
+        case "brightness_move_up":
+        case "brightness_move_down":
+        case undefined:
+          return { brightness: v.brightness };
+        default:
+          return {};
+      }
+    }),
     map<LED1836G9Sink, ZigbeePublish>((state) => ({
       friendlyName: "az/light/desk",
       value: state,
@@ -53,9 +51,8 @@ function light(sources: Partial<Sources>): Observable<Result> {
  */
 async function init() {
   const mqttOptions = initMqttOptions();
-  const hassOptions = initHass();
 
-  const driver = await initDriver(LOGGER, mqttOptions, hassOptions);
+  const driver = await initDriver(LOGGER, mqttOptions);
 
   paraluna(LOGGER, light, driver);
 }

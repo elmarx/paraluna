@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "async-mqtt": "^2.6.1",
-    "hasso": "^0.3.0",
     "rxjs": "^7.5.1",
     "ts-try": "^0.2.0"
   },

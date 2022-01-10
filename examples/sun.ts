@@ -1,6 +1,4 @@
-import { initHass } from "./index";
 import { hassDriver } from "../src";
-import { KnownEntities } from "hasso";
 import { map, skip, take } from "rxjs/operators";
 import { concat, zip } from "rxjs";
 import { diffString } from "json-diff";
@@ -11,6 +9,7 @@ import { debugObserver, LOGGER } from "./logging";
  * which shows a colored diff
  */
 async function sun() {
+  /*
   const { hassToken, hassUrl } = initHass();
   const hass = await hassDriver(LOGGER, hassToken, hassUrl);
 
@@ -24,6 +23,7 @@ async function sun() {
 
   // prepend the initial state
   return concat(sun$.pipe(take(1)), sunDiff$).subscribe(debugObserver());
+   */
 }
 
 if (require.main === module) {
