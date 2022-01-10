@@ -1,9 +1,10 @@
-import { AsyncMqttClient } from "async-mqtt";
+import { AsyncMqttClient, IPublishPacket } from "async-mqtt";
 import { concat, from, fromEvent, Observable } from "rxjs";
 import { filter, share, skip } from "rxjs/operators";
-import { isError, tryF } from "ts-try";
 import { ISubscriptionGrant } from "mqtt";
 import { Logger } from "winston";
+import { tryCatch } from "fp-ts/TaskEither";
+import { Either, isLeft } from "fp-ts/Either";
 
 export type MqttMessage = {
   topic: string;
@@ -22,11 +23,17 @@ function mqttSink(logger: Logger, client: AsyncMqttClient) {
       error(err: any): void {
         logger.error("MQTT Sink error: ", err);
       },
-      async next(value: MqttMessage): Promise<void> {
-        const result = await tryF(client.publish(value.topic, value.value));
-        if (isError(result)) {
-          logger.error("MQTT Sink publish error", result);
+      async next(value: MqttMessage): Promise<Either<unknown, IPublishPacket>> {
+        const result = await tryCatch(
+          () => client.publish(value.topic, value.value),
+          (e) => e,
+        )();
+
+        if (isLeft(result)) {
+          logger.error("MQTT Sink publish error", result.left);
         }
+
+        return result;
       },
     });
   };
