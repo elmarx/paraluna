@@ -1,4 +1,4 @@
-import { MqttMessage, MqttSink } from "../mqtt";
+import { MqttMessage } from "../mqtt/interface.message";
 import { mergeMap } from "rxjs/operators";
 import {
   ZIGBEE2MQTT_BASE_TOPIC,
@@ -9,6 +9,7 @@ import {
 import { isZigbeeSinglePublish } from "./guards";
 import { Logger } from "winston";
 import { Json } from "fp-ts/Json";
+import { MqttSink } from "../mqtt";
 
 function into(
   state: Json,

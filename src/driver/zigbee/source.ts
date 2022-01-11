@@ -1,4 +1,4 @@
-import { MqttDriver, MqttMessage } from "../mqtt";
+import { MqttMessage } from "../mqtt/interface.message";
 import { concat, from, Observable } from "rxjs";
 import { distinct, filter, map, share, skip } from "rxjs/operators";
 import {
@@ -13,6 +13,7 @@ import {
 import { buildParser } from "./source.parse";
 import { Logger } from "winston";
 import { JsonRecord } from "fp-ts/Json";
+import { MqttDriver } from "../mqtt";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
