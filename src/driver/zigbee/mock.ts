@@ -1,6 +1,5 @@
 import { EMPTY, Observable } from "rxjs";
 import {
-  BridgeState,
   DeviceInformation,
   DeviceMessage,
   ZigbeeMessage,
@@ -9,6 +8,7 @@ import {
 } from "./interface";
 import { map } from "rxjs/operators";
 import { JsonRecord } from "fp-ts/Json";
+import { BridgeState } from "./codec.bridge";
 
 export function zigbeeSourceMock<T>(
   devices: Map<string, Observable<T>> = new Map(),

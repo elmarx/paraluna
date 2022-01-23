@@ -1,5 +1,3 @@
-export type BridgeState = "online" | "offline";
-
 export type DeviceInformation = (
   | { definition: Definition; supported: true }
   | {

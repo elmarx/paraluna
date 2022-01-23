@@ -1,6 +1,5 @@
 import {
   BridgeDevicesMessage,
-  BridgeState,
   BridgeStateMessage,
   DeviceAttributeMessage,
   DeviceMessage,
@@ -8,6 +7,8 @@ import {
   ZigbeeMessage,
   ZigbeeSubscription,
 } from "./interface";
+import { BridgeState } from "./codec.bridge";
+import { unwrap } from "../../utils";
 
 /**
  * parse messages from devices
@@ -53,7 +54,10 @@ function parseAttributeMessage(
  * @see https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html#zigbee2mqttbridgestate
  */
 function parseBridgeState(value: Buffer): BridgeStateMessage {
-  return { type: "bridge", state: value.toString() as BridgeState };
+  return {
+    type: "bridge",
+    state: unwrap(BridgeState.decode(value.toString())),
+  };
 }
 
 /**

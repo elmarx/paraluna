@@ -1,5 +1,6 @@
-import { BridgeState, DeviceInformation } from "./interface.bridge";
+import { DeviceInformation } from "./interface.bridge";
 import { JsonRecord } from "fp-ts/Json";
+import { BridgeState } from "./codec.bridge";
 
 export type DeviceMessage<S = JsonRecord> = {
   type: "device";

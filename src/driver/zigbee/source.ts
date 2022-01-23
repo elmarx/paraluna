@@ -2,7 +2,6 @@ import { MqttMessage } from "../mqtt/interface.message";
 import { concat, from, Observable } from "rxjs";
 import { distinct, filter, map, share, skip } from "rxjs/operators";
 import {
-  BridgeState,
   DeviceInformation,
   DeviceMessage,
   ZIGBEE2MQTT_BASE_TOPIC,
@@ -14,6 +13,8 @@ import { buildParser } from "./source.parse";
 import { Logger } from "winston";
 import { JsonRecord } from "fp-ts/Json";
 import { MqttDriver } from "../mqtt";
+import { unwrap } from "../../utils";
+import { BridgeState } from "./codec.bridge";
 
 /**
  * reuse the mqtt source. parse mqtt messages and revive zigbee2mqtt's 'last_seen' date
@@ -64,7 +65,7 @@ export function zigbeeSource(_logger: Logger, mqtt: MqttDriver): ZigbeeSource {
 
     state(): Observable<BridgeState> {
       return mqtt.source.topic(ZIGBEE2MQTT_BASE_TOPIC + "/bridge/state").pipe(
-        map<MqttMessage, BridgeState>(({ value }) => value.toString() as any),
+        map(({ value }) => unwrap(BridgeState.decode(value.toString()))),
         share(),
       );
     },

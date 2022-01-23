@@ -1,6 +1,5 @@
 import { Observable } from "rxjs";
 import {
-  BridgeState,
   DeviceInformation,
   DeviceMessage,
   ZigbeeMessage,
@@ -8,6 +7,7 @@ import {
 } from "./interface";
 import { DeviceSource } from "../../devices";
 import { JsonRecord } from "fp-ts/Json";
+import { BridgeState } from "./codec.bridge";
 
 /**
  * ZigbeeSource interface. Uses function overloading to set the correct types for given (zigbee2mqtt) model ids
