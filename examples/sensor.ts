@@ -7,29 +7,31 @@ import { initHass, initMqttOptions } from "./index";
 import { connectAsync } from "async-mqtt";
 
 /**
- * show usage of the hass source. Extended to match the "sun" example of hasso,
+ * show usage of the hass source. Extended to match the "sensor" example of hasso,
  * which shows a colored diff
  */
-async function sun() {
+async function sensor() {
   const { token, url } = initHass();
   const mqttOptions = initMqttOptions();
   const mqttClient = await connectAsync(undefined, mqttOptions);
 
   const hass = await hassDriver(LOGGER, mqttClient, token, url);
 
-  const sun$ = hass.source.sun();
+  const sensor$ = hass.source.sensor(
+    "fritz_box_7520_ui_link_download_throughput",
+  );
 
-  const sunPrevious$ = sun$.pipe(skip(1));
+  const sensorPrevious$ = sensor$.pipe(skip(1));
 
   // build a "sliding window" so we can always compare the current and the previous state
-  const sunDiff$ = zip(sun$, sunPrevious$).pipe(
+  const sensorDiff$ = zip(sensor$, sensorPrevious$).pipe(
     map(([a, b]) => diffString(a, b)),
   );
 
   // prepend the initial state
-  return concat(sun$.pipe(take(1)), sunDiff$).subscribe(debugObserver());
+  return concat(sensor$.pipe(take(1)), sensorDiff$).subscribe(debugObserver());
 }
 
 if (require.main === module) {
-  sun().catch((err) => console.error(err));
+  sensor().catch((err) => console.error(err));
 }

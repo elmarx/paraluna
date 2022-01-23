@@ -9,9 +9,10 @@ import {
   ZigbeePublish,
 } from "../src";
 import { map } from "rxjs/operators";
-import { initMqttOptions } from "./index";
+import { initHass, initMqttOptions } from "./index";
 import { Observable } from "rxjs";
 import { LOGGER } from "./logging";
+import { connectAsync } from "async-mqtt";
 
 /**
  * a basic example that connects a button ("az_trigger_dimmer") with a light ("az_desk_light")
@@ -51,8 +52,10 @@ function light(sources: Partial<Sources>): Observable<Result> {
  */
 async function init() {
   const mqttOptions = initMqttOptions();
+  const mqttClient = await connectAsync(undefined, mqttOptions);
+  const hassOptions = initHass();
 
-  const driver = await initDriver(LOGGER, mqttOptions);
+  const driver = await initDriver(LOGGER, mqttOptions, hassOptions);
 
   paraluna(LOGGER, light, driver);
 }

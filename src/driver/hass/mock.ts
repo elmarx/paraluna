@@ -1,12 +1,15 @@
 import { Observable, of } from "rxjs";
 import { HassSource } from "./interface";
+import { Sun } from "./codec.sun";
+import { HassState } from "./codec.state";
 
-export function hassSourceMock<T>(
-  entities: Map<string, Observable<T>> = new Map(),
-): HassSource {
+export function hassSourceMock(): HassSource {
   return {
-    state(entityId: string): Observable<any> {
-      return entities.get(entityId) || of();
+    sun(): Observable<Sun> {
+      return of() as any;
+    },
+    sensor(_name: string): Observable<HassState> {
+      return of();
     },
   };
 }

@@ -19,17 +19,15 @@ export function initMqttOptions(): IClientOptions {
   };
 }
 
-/*
-export function initHass(): { hassToken: string; hassUrl: string } {
-  const hassUrl = process.env.HASS_URL;
-  const hassToken = process.env.HASS_TOKEN;
+export function initHass(): { token: string; url: string } {
+  const url = process.env.HASS_URL;
+  const token = process.env.HASS_TOKEN;
 
-  assert(hassUrl);
-  assert(hassToken);
+  assert(url);
+  assert(token);
 
-  return { hassUrl, hassToken };
+  return { token, url: url };
 }
- */
 
 /**
  * initialize the zigbee2mqtt source/driver and subscribe to the bridge-state topic ("online" or "offline") printing to console
