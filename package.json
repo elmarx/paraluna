@@ -14,7 +14,7 @@
   "author": "Elmar Athmer <elmar@athmer.org>",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "rm -r dist ; tsc -b"
+    "prepublishOnly": "rm -r dist ; tsc -p tsconfig.dist.json"
   },
   "files": [
     "dist",
@@ -57,7 +57,7 @@
       "examples"
     ],
     "ext": "ts",
-    "exec": "ts-node --dir examples"
+    "exec": "ts-node"
   },
   "prettier": {
     "trailingComma": "all"
